@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}NovaOps{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <span>⚡</span>
+                NovaOps
+            </div>
+
+            <nav class="navigation">
+
+                <a href="/" class="nav-item active">
+                    <span>▦</span>
+                    Dashboard
+                </a>
+
+                <a href="#" class="nav-item">
+                    <span>📦</span>
+                    Projects
+                </a>
+
+                <a href="#" class="nav-item">
+                    <span>🖥</span>
+                    Servers
+                </a>
+
+                <a href="#" class="nav-item">
+                    <span>📊</span>
+                    Monitoring
+                </a>
+
+                <a href="#" class="nav-item">
+                    <span>🚀</span>
+                    Deployments
+                </a>
+
+                <a href="#" class="nav-item">
+                    <span>📋</span>
+                    Logs
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <a href="#" class="nav-item">
+                    <span>⚙</span>
+                    Settings
+                </a>
+
+            </div>
+
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main">
+
+            <!-- Navbar -->
+            <header class="navbar">
+
+                <div>
+                    <h2>{% block page_title %}Dashboard{% endblock %}</h2>
+                    <p>Cloud & DevOps Operations Center</p>
+                </div>
+
+                <div class="user-section">
+                    <div class="status-dot"></div>
+                    <span>AbdulNova</span>
+                </div>
+
+            </header>
+
+
+            <!-- Page Content -->
+            <section class="content">
+
+                {% block content %}
+                {% endblock %}
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>

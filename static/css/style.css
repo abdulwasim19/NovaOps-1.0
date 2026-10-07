@@ -1,0 +1,334 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #172033;
+}
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+/* Sidebar */
+
+.sidebar {
+    width: 240px;
+    background: #111827;
+    color: white;
+    padding: 24px 16px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    padding: 0 12px 30px;
+}
+
+.logo span {
+    margin-right: 8px;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #9ca3af;
+
+    padding: 12px 14px;
+
+    border-radius: 8px;
+
+    display: flex;
+    gap: 12px;
+
+    transition: 0.2s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background: #1f2937;
+    color: white;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+}
+
+
+/* Main */
+
+.main {
+    flex: 1;
+}
+
+
+/* Navbar */
+
+.navbar {
+    height: 82px;
+
+    background: white;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 35px;
+}
+
+.navbar h2 {
+    font-size: 22px;
+}
+
+.navbar p {
+    color: #6b7280;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-weight: 600;
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+
+    background: #22c55e;
+
+    border-radius: 50%;
+}
+
+
+/* Content */
+
+.content {
+    padding: 35px;
+}
+
+.welcome {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+.welcome h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.welcome p {
+    color: #6b7280;
+}
+
+.primary-btn {
+    border: none;
+
+    background: #111827;
+    color: white;
+
+    padding: 12px 18px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-weight: 600;
+}
+
+
+/* Statistics */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+
+    margin-bottom: 35px;
+}
+
+.stat-card {
+    background: white;
+
+    padding: 22px;
+
+    border-radius: 12px;
+
+    border: 1px solid #e5e7eb;
+
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+}
+
+.stat-icon {
+    font-size: 24px;
+}
+
+.stat-card p {
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.stat-card h2 {
+    font-size: 25px;
+}
+
+
+/* Sections */
+
+.section-header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin: 28px 0 15px;
+}
+
+.section-header h2 {
+    font-size: 19px;
+}
+
+.section-header p {
+    color: #6b7280;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.healthy {
+    color: #16a34a;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* Overview */
+
+.overview-card {
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    padding: 25px;
+
+    display: grid;
+
+    gap: 25px;
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 10px;
+
+    font-size: 14px;
+}
+
+.progress {
+    height: 8px;
+
+    background: #e5e7eb;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+
+    border-radius: 10px;
+}
+
+.cpu {
+    width: 42%;
+    background: #2563eb;
+}
+
+.memory {
+    width: 61%;
+    background: #8b5cf6;
+}
+
+.disk {
+    width: 38%;
+    background: #16a34a;
+}
+
+
+/* Activity */
+
+.activity-card {
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+}
+
+.activity {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 18px 22px;
+
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.activity:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    font-size: 20px;
+}
+
+.activity div {
+    flex: 1;
+}
+
+.activity p {
+    color: #6b7280;
+    font-size: 13px;
+
+    margin-top: 4px;
+}
+
+.time {
+    color: #9ca3af;
+    font-size: 12px;
+}

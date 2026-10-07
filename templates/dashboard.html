@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}
+NovaOps | Dashboard
+{% endblock %}
+
+{% block page_title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="welcome">
+    <div>
+        <h1>Welcome back, AbdulNova 👋</h1>
+        <p>Monitor your infrastructure and manage your operations.</p>
+    </div>
+
+    <button class="primary-btn">
+        + New Project
+    </button>
+</div>
+
+
+<!-- Statistics -->
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-icon">📦</div>
+
+        <div>
+            <p>Total Projects</p>
+            <h2>04</h2>
+        </div>
+    </div>
+
+
+    <div class="stat-card">
+        <div class="stat-icon">🖥</div>
+
+        <div>
+            <p>Active Servers</p>
+            <h2>08</h2>
+        </div>
+    </div>
+
+
+    <div class="stat-card">
+        <div class="stat-icon">🚀</div>
+
+        <div>
+            <p>Deployments</p>
+            <h2>24</h2>
+        </div>
+    </div>
+
+
+    <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+
+        <div>
+            <p>System Health</p>
+            <h2>98%</h2>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- System Overview -->
+
+<div class="section-header">
+    <div>
+        <h2>System Overview</h2>
+        <p>Current infrastructure status</p>
+    </div>
+
+    <span class="healthy">
+        ● All systems operational
+    </span>
+</div>
+
+
+<div class="overview-card">
+
+    <div class="metric">
+
+        <div class="metric-header">
+            <span>CPU Usage</span>
+            <strong>42%</strong>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar cpu"></div>
+        </div>
+
+    </div>
+
+
+    <div class="metric">
+
+        <div class="metric-header">
+            <span>Memory Usage</span>
+            <strong>61%</strong>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar memory"></div>
+        </div>
+
+    </div>
+
+
+    <div class="metric">
+
+        <div class="metric-header">
+            <span>Disk Usage</span>
+            <strong>38%</strong>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar disk"></div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Recent Activity -->
+
+<div class="section-header">
+    <div>
+        <h2>Recent Activity</h2>
+        <p>Latest operations</p>
+    </div>
+</div>
+
+
+<div class="activity-card">
+
+    <div class="activity">
+        <span class="activity-icon">🚀</span>
+
+        <div>
+            <strong>Deployment completed</strong>
+            <p>NovaOps API deployed successfully</p>
+        </div>
+
+        <span class="time">5 min ago</span>
+    </div>
+
+
+    <div class="activity">
+        <span class="activity-icon">🖥</span>
+
+        <div>
+            <strong>Server connected</strong>
+            <p>Production server is online</p>
+        </div>
+
+        <span class="time">18 min ago</span>
+    </div>
+
+
+    <div class="activity">
+        <span class="activity-icon">📦</span>
+
+        <div>
+            <strong>Project created</strong>
+            <p>NovaOps monitoring project created</p>
+        </div>
+
+        <span class="time">1 hour ago</span>
+    </div>
+
+</div>
+
+{% endblock %}
