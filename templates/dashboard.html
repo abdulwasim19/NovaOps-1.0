@@ -10,171 +10,149 @@ Dashboard
 
 {% block content %}
 
+<!-- Welcome Section -->
 <div class="welcome">
+
     <div>
-        <h1>Welcome back, AbdulNova 👋</h1>
-        <p>Monitor your infrastructure and manage your operations.</p>
+        <h1>Welcome back 👋</h1>
+        <p>Here's what's happening with your infrastructure today.</p>
     </div>
 
-    <button class="primary-btn">
+    <a href="{{ url_for('new_project') }}" class="primary-btn">
         + New Project
-    </button>
+    </a>
+
 </div>
 
 
 <!-- Statistics -->
-
 <div class="stats-grid">
 
+    <!-- Projects -->
     <div class="stat-card">
-        <div class="stat-icon">📦</div>
 
-        <div>
-            <p>Total Projects</p>
-            <h2>04</h2>
+        <div class="stat-card-header">
+            <span class="stat-label">Total Projects</span>
         </div>
+
+        <h2>{{ stats.projects }}</h2>
+
+        <p class="stat-description">
+            Projects managed in NovaOps
+        </p>
+
     </div>
 
 
+    <!-- Servers -->
     <div class="stat-card">
-        <div class="stat-icon">🖥</div>
 
-        <div>
-            <p>Active Servers</p>
-            <h2>08</h2>
+        <div class="stat-card-header">
+            <span class="stat-label">Servers</span>
         </div>
+
+        <h2>{{ stats.servers }}</h2>
+
+        <p class="stat-description">
+            Infrastructure servers
+        </p>
+
     </div>
 
 
+    <!-- Deployments -->
     <div class="stat-card">
-        <div class="stat-icon">🚀</div>
 
-        <div>
-            <p>Deployments</p>
-            <h2>24</h2>
+        <div class="stat-card-header">
+            <span class="stat-label">Deployments</span>
         </div>
+
+        <h2>{{ stats.deployments }}</h2>
+
+        <p class="stat-description">
+            Total deployments
+        </p>
+
     </div>
 
 
+    <!-- Health -->
     <div class="stat-card">
-        <div class="stat-icon">⚡</div>
+
+        <div class="stat-card-header">
+            <span class="stat-label">System Health</span>
+        </div>
+
+        <h2>{{ stats.health }}%</h2>
+
+        <p class="stat-description">
+            Overall infrastructure health
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- Recent Projects -->
+
+<div class="recent-projects">
+
+    <div class="recent-projects-header">
 
         <div>
-            <p>System Health</p>
-            <h2>98%</h2>
-        </div>
-    </div>
-
-</div>
-
-
-<!-- System Overview -->
-
-<div class="section-header">
-    <div>
-        <h2>System Overview</h2>
-        <p>Current infrastructure status</p>
-    </div>
-
-    <span class="healthy">
-        ● All systems operational
-    </span>
-</div>
-
-
-<div class="overview-card">
-
-    <div class="metric">
-
-        <div class="metric-header">
-            <span>CPU Usage</span>
-            <strong>42%</strong>
+            <h2>Recent Projects</h2>
+            <p>Your latest projects</p>
         </div>
 
-        <div class="progress">
-            <div class="progress-bar cpu"></div>
-        </div>
+        <a href="{{ url_for('projects') }}" class="secondary-btn">
+            View All
+        </a>
 
     </div>
 
 
-    <div class="metric">
+    <div class="recent-project-list">
 
-        <div class="metric-header">
-            <span>Memory Usage</span>
-            <strong>61%</strong>
+        {% for project in recent_projects %}
+
+        <div class="recent-project-item">
+
+            <div class="recent-project-info">
+
+                <h3>{{ project.name }}</h3>
+
+                <p>{{ project.description }}</p>
+
+            </div>
+
+            <span class="project-status">
+                {{ project.status }}
+            </span>
+
         </div>
 
-        <div class="progress">
-            <div class="progress-bar memory"></div>
+        {% else %}
+
+        <div class="empty-state">
+
+            <h3>No Projects Yet</h3>
+
+            <p>
+                Create your first project to get started.
+            </p>
+
+            <a href="{{ url_for('new_project') }}" class="primary-btn">
+                + Create Project
+            </a>
+
         </div>
 
-    </div>
-
-
-    <div class="metric">
-
-        <div class="metric-header">
-            <span>Disk Usage</span>
-            <strong>38%</strong>
-        </div>
-
-        <div class="progress">
-            <div class="progress-bar disk"></div>
-        </div>
+        {% endfor %}
 
     </div>
 
 </div>
 
-
-<!-- Recent Activity -->
-
-<div class="section-header">
-    <div>
-        <h2>Recent Activity</h2>
-        <p>Latest operations</p>
-    </div>
-</div>
-
-
-<div class="activity-card">
-
-    <div class="activity">
-        <span class="activity-icon">🚀</span>
-
-        <div>
-            <strong>Deployment completed</strong>
-            <p>NovaOps API deployed successfully</p>
-        </div>
-
-        <span class="time">5 min ago</span>
-    </div>
-
-
-    <div class="activity">
-        <span class="activity-icon">🖥</span>
-
-        <div>
-            <strong>Server connected</strong>
-            <p>Production server is online</p>
-        </div>
-
-        <span class="time">18 min ago</span>
-    </div>
-
-
-    <div class="activity">
-        <span class="activity-icon">📦</span>
-
-        <div>
-            <strong>Project created</strong>
-            <p>NovaOps monitoring project created</p>
-        </div>
-
-        <span class="time">1 hour ago</span>
-    </div>
-
-</div>
 
 {% endblock %}

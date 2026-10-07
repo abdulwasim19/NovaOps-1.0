@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}
+NovaOps | Edit Project
+{% endblock %}
+
+{% block page_title %}
+Edit Project
+{% endblock %}
+
+{% block content %}
+
+<div class="welcome">
+
+    <div>
+        <h1>Edit Project</h1>
+        <p>Update your project information.</p>
+    </div>
+
+</div>
+
+<div class="form-card">
+
+    <form method="POST">
+
+        <div class="form-group">
+
+            <label for="name">
+                Project Name
+            </label>
+
+            <input type="text" id="name" name="name" value="{{ project.name }}" required>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="description">
+                Description
+            </label>
+
+            <textarea id="description" name="description" required>{{ project.description }}</textarea>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="status">
+                Status
+            </label>
+
+            <select id="status" name="status">
+
+                <option value="Planning" {% if project.status=="Planning" %}selected{% endif %}>
+                    Planning
+                </option>
+
+                <option value="Active" {% if project.status=="Active" %}selected{% endif %}>
+                    Active
+                </option>
+
+                <option value="Completed" {% if project.status=="Completed" %}selected{% endif %}>
+                    Completed
+                </option>
+
+                <option value="In Progress" {% if project.status=="In Progress" %}selected{% endif %}>
+                    In Progress
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button type="submit" class="primary-btn">
+            Save Changes
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}
