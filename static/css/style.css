@@ -700,3 +700,212 @@ body {
         white-space: normal;
     }
 }
+
+/* =========================================
+   SERVERS
+========================================= */
+
+.server-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.server-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 24px 28px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.server-card-header h2 {
+    font-size: 18px;
+    color: #111827;
+}
+
+.server-card-header p {
+    margin-top: 5px;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.server-count {
+    padding: 7px 12px;
+
+    background: #f3f4f6;
+    color: #374151;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.server-table {
+    width: 100%;
+}
+
+.server-table-header,
+.server-row {
+    display: grid;
+
+    grid-template-columns:
+        1.5fr 1.5fr 1fr 1fr 100px;
+
+    align-items: center;
+
+    column-gap: 20px;
+
+    padding: 18px 28px;
+}
+
+.server-table-header {
+    background: #f9fafb;
+
+    color: #6b7280;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+}
+
+.server-row {
+    border-top: 1px solid #f0f0f0;
+
+    color: #374151;
+
+    font-size: 13px;
+}
+
+.server-name {
+    font-weight: 600;
+    color: #111827;
+}
+
+.server-status {
+    justify-self: start;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    background: #ecfdf5;
+    color: #16a34a;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* =========================================
+   FORM ACTIONS
+========================================= */
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.form-actions .primary-btn,
+.form-actions .secondary-btn {
+    padding: 12px 18px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.form-actions .secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================================
+   SERVER ACTION BUTTON
+========================================= */
+
+.server-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.server-actions .secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 64px;
+    height: 34px;
+
+    padding: 0 12px;
+
+    border-radius: 8px;
+
+    background: #f3f4f6;
+    color: #374151;
+
+    border: 1px solid #d1d5db;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition: all 0.2s ease;
+}
+
+.server-actions .secondary-btn:hover {
+    background: #e5e7eb;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+.server-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.server-actions form {
+    margin: 0;
+}
+
+.server-actions .danger-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 64px;
+    height: 34px;
+
+    padding: 0 12px;
+
+    border-radius: 8px;
+
+    background: #fef2f2;
+    color: #dc2626;
+
+    border: 1px solid #fecaca;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.server-actions .danger-btn:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    transform: translateY(-1px);
+}
