@@ -17,63 +17,61 @@ Projects
         <p>Manage and monitor your applications.</p>
     </div>
 
-    <button class="primary-btn">
+    <a href="{{ url_for('new_project') }}" class="primary-btn">
         + New Project
-    </button>
+    </a>
 
 </div>
 
-
 <div class="projects-grid">
 
-    <div class="project-card">
-
-        <div class="project-header">
-            <span class="project-icon">⚡</span>
-
-            <span class="project-status">
-                ● Active
-            </span>
-        </div>
-
-        <h2>NovaOps</h2>
-
-        <p>
-            Cloud and DevOps operations platform.
-        </p>
-
-        <div class="project-footer">
-            <span>Python</span>
-            <span>Flask</span>
-            <span>DevOps</span>
-        </div>
-
-    </div>
-
+    {% for project in projects %}
 
     <div class="project-card">
 
         <div class="project-header">
-            <span class="project-icon">☁️</span>
+
+            <h2>{{ project.name }}</h2>
 
             <span class="project-status">
-                ● Active
+                {{ project.status }}
             </span>
+
         </div>
 
-        <h2>Cloud Infrastructure</h2>
+        <p>{{ project.description }}</p>
 
-        <p>
-            AWS infrastructure monitoring project.
-        </p>
+        <div class="project-actions">
 
-        <div class="project-footer">
-            <span>AWS</span>
-            <span>EC2</span>
-            <span>Linux</span>
+            <a href="#" class="secondary-btn">
+                Edit
+            </a>
+
+            <a href="#" class="danger-btn">
+                Delete
+            </a>
+
         </div>
 
     </div>
+
+    {% else %}
+
+    <div class="empty-state">
+
+        <h2>No Projects Yet</h2>
+
+        <p>
+            Create your first project to get started.
+        </p>
+
+        <a href="{{ url_for('new_project') }}" class="primary-btn">
+            + Create Project
+        </a>
+
+    </div>
+
+    {% endfor %}
 
 </div>
 

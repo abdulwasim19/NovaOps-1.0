@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}
+NovaOps | New Project
+{% endblock %}
+
+{% block page_title %}
+New Project
+{% endblock %}
+
+{% block content %}
+
+<div class="welcome">
+
+    <div>
+        <h1>Create New Project</h1>
+        <p>Add a new project to NovaOps.</p>
+    </div>
+
+</div>
+
+<div class="form-card">
+
+    <form method="POST">
+
+        <div class="form-group">
+            <label for="name">Project Name</label>
+
+            <input type="text" id="name" name="name" placeholder="Enter project name" required>
+        </div>
+
+
+        <div class="form-group">
+            <label for="description">Description</label>
+
+            <textarea id="description" name="description" placeholder="Enter project description" required></textarea>
+        </div>
+
+
+        <div class="form-group">
+            <label for="status">Status</label>
+
+            <select id="status" name="status">
+
+                <option value="Planning">Planning</option>
+                <option value="Active">Active</option>
+                <option value="Completed">Completed</option>
+                <option value="In Progress">In Progress</option>
+
+            </select>
+        </div>
+
+
+        <button type="submit" class="primary-btn">
+            Create Project
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}
