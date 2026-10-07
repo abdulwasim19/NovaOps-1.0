@@ -332,3 +332,87 @@ body {
     color: #9ca3af;
     font-size: 12px;
 }
+
+.projects-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 20px;
+}
+
+
+.project-card {
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    padding: 25px;
+
+    transition: 0.2s;
+}
+
+
+.project-card:hover {
+    transform: translateY(-3px);
+}
+
+
+.project-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+
+.project-icon {
+    font-size: 28px;
+}
+
+
+.project-status {
+    color: #16a34a;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.project-card h2 {
+    margin-bottom: 8px;
+}
+
+
+.project-card p {
+    color: #6b7280;
+
+    line-height: 1.6;
+}
+
+
+.project-footer {
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 20px;
+}
+
+
+.project-footer span {
+    background: #f3f4f6;
+
+    padding: 6px 10px;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+}

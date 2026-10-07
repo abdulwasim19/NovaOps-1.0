@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}
+NovaOps | Projects
+{% endblock %}
+
+{% block page_title %}
+Projects
+{% endblock %}
+
+{% block content %}
+
+<div class="welcome">
+
+    <div>
+        <h1>Your Projects</h1>
+        <p>Manage and monitor your applications.</p>
+    </div>
+
+    <button class="primary-btn">
+        + New Project
+    </button>
+
+</div>
+
+
+<div class="projects-grid">
+
+    <div class="project-card">
+
+        <div class="project-header">
+            <span class="project-icon">⚡</span>
+
+            <span class="project-status">
+                ● Active
+            </span>
+        </div>
+
+        <h2>NovaOps</h2>
+
+        <p>
+            Cloud and DevOps operations platform.
+        </p>
+
+        <div class="project-footer">
+            <span>Python</span>
+            <span>Flask</span>
+            <span>DevOps</span>
+        </div>
+
+    </div>
+
+
+    <div class="project-card">
+
+        <div class="project-header">
+            <span class="project-icon">☁️</span>
+
+            <span class="project-status">
+                ● Active
+            </span>
+        </div>
+
+        <h2>Cloud Infrastructure</h2>
+
+        <p>
+            AWS infrastructure monitoring project.
+        </p>
+
+        <div class="project-footer">
+            <span>AWS</span>
+            <span>EC2</span>
+            <span>Linux</span>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

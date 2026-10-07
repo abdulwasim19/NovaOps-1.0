@@ -25,14 +25,14 @@
 
             <nav class="navigation">
 
-                <a href="/" class="nav-item active">
-                    <span>▦</span>
-                    Dashboard
+                <a href="{{ url_for('dashboard') }}" class="nav-item active">
+                    <span class="nav-icon">▦</span>
+                    <span>Dashboard</span>
                 </a>
 
-                <a href="#" class="nav-item">
-                    <span>📦</span>
-                    Projects
+                <a href="{{ url_for('projects') }}" class="nav-item">
+                    <span class="nav-icon">📦</span>
+                    <span>Projects</span>
                 </a>
 
                 <a href="#" class="nav-item">
@@ -59,9 +59,12 @@
 
             <div class="sidebar-bottom">
 
-                <a href="#" class="nav-item">
-                    <span>⚙</span>
-                    Settings
+                <a href="/projects" class="nav-item">
+                    <span>📦</span>
+                    Projects
+                </a>
+                <span>⚙</span>
+                Settings
                 </a>
 
             </div>
