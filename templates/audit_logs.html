@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}
+NovaOps | Audit Logs
+{% endblock %}
+
+{% block page_title %}
+Audit Logs
+{% endblock %}
+
+{% block content %}
+
+<div class="welcome">
+
+    <div>
+        <h1>Audit Logs</h1>
+        <p>Track important activity across NovaOps.</p>
+    </div>
+
+</div>
+
+
+<div class="audit-card">
+
+    <div class="audit-card-header">
+
+        <div>
+            <h2>System Activity</h2>
+            <p>Recent project, server, and deployment actions.</p>
+        </div>
+
+        <span class="server-count">
+            {{ logs|length }} Events
+        </span>
+
+    </div>
+
+
+    <div class="audit-table">
+
+        <div class="audit-table-header">
+
+            <span>Time</span>
+            <span>Action</span>
+            <span>Resource</span>
+            <span>Activity</span>
+
+        </div>
+
+
+        {% for log in logs %}
+
+        <div class="audit-row">
+
+            <span class="audit-time">
+                {{ log.created_at.strftime("%Y-%m-%d %H:%M:%S") }}
+            </span>
+
+
+            <span class="audit-action
+                {% if log.action == 'CREATE' %}
+                    audit-create
+                {% elif log.action == 'UPDATE' %}
+                    audit-update
+                {% elif log.action == 'DELETE' %}
+                    audit-delete
+                    {% elif log.action == 'BASELINE' %}
+    audit-baseline
+                {% endif %}">
+                {{ log.action }}
+            </span>
+
+
+            <span class="audit-resource">
+                {{ log.entity_type }}
+                {% if log.entity_id %}
+                #{{ log.entity_id }}
+                {% endif %}
+            </span>
+
+
+            <span class="audit-message">
+                {{ log.message }}
+            </span>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <h3>No Activity Yet</h3>
+
+            <p>
+                NovaOps activity will appear here.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

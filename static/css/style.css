@@ -1993,3 +1993,360 @@ body {
 .project-deployment-overview .deployment-summary-grid {
     margin-top: 20px;
 }
+
+/* =========================================
+   AUDIT LOGS
+========================================= */
+
+.audit-card {
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+.audit-card-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 24px 28px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.audit-card-header h2 {
+    font-size: 18px;
+
+    color: #111827;
+}
+
+.audit-card-header p {
+    margin-top: 5px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+.audit-table {
+    width: 100%;
+}
+
+.audit-table-header,
+.audit-row {
+    display: grid;
+
+    grid-template-columns:
+        170px 100px 140px minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 18px 28px;
+}
+
+.audit-table-header {
+    background: #f9fafb;
+
+    color: #6b7280;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+}
+
+.audit-row {
+    border-top: 1px solid #f0f0f0;
+
+    font-size: 13px;
+}
+
+.audit-time {
+    color: #6b7280;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+}
+
+.audit-action {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: fit-content;
+
+    min-width: 78px;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+.audit-create {
+    background: #ecfdf5;
+
+    color: #16a34a;
+}
+
+.audit-update {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+.audit-delete {
+    background: #fef2f2;
+
+    color: #dc2626;
+}
+
+.audit-resource {
+    color: #374151;
+
+    font-weight: 600;
+}
+
+.audit-message {
+    min-width: 0;
+
+    color: #4b5563;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================
+   AUDIT RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+    .audit-table {
+        overflow-x: auto;
+    }
+
+    .audit-table-header,
+    .audit-row {
+        min-width: 850px;
+    }
+}
+
+
+/* =========================================
+   RECENT ACTIVITY
+========================================= */
+
+.recent-activity {
+    margin-top: 30px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    padding: 26px 28px;
+}
+
+.recent-activity-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 10px;
+}
+
+.recent-activity-header h2 {
+    font-size: 19px;
+
+    color: #111827;
+}
+
+.recent-activity-header p {
+    margin-top: 5px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+.activity-list {
+    width: 100%;
+}
+
+.activity-item {
+    display: grid;
+
+    grid-template-columns:
+        10px minmax(0, 1fr) 140px;
+
+    align-items: center;
+
+    gap: 16px;
+
+    padding: 17px 0;
+
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+
+/* Activity Indicator */
+
+.activity-indicator {
+    width: 8px;
+
+    height: 8px;
+
+    border-radius: 50%;
+}
+
+
+/* Activity Info */
+
+.activity-info {
+    min-width: 0;
+}
+
+.activity-top {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 6px;
+}
+
+.activity-action {
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+.activity-resource {
+    color: #6b7280;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+}
+
+.activity-info p {
+    color: #374151;
+
+    font-size: 13px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* CREATE */
+
+.activity-create {
+    background: #16a34a;
+}
+
+.activity-create-text {
+    color: #16a34a;
+}
+
+
+/* UPDATE */
+
+.activity-update {
+    background: #2563eb;
+}
+
+.activity-update-text {
+    color: #2563eb;
+}
+
+
+/* DELETE */
+
+.activity-delete {
+    background: #dc2626;
+}
+
+.activity-delete-text {
+    color: #dc2626;
+}
+
+
+/* Time */
+
+.activity-time {
+    color: #6b7280;
+
+    font-size: 12px;
+
+    text-align: right;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================
+   ACTIVITY RESPONSIVE
+========================================= */
+
+@media (max-width: 800px) {
+
+    .recent-activity-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .activity-item {
+        grid-template-columns:
+            10px minmax(0, 1fr);
+    }
+
+    .activity-time {
+        grid-column: 2;
+
+        text-align: left;
+    }
+}
+
+/* Baseline */
+
+.audit-baseline {
+    background: #f3f4f6;
+    color: #6b7280;
+}

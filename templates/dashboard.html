@@ -407,4 +407,117 @@ Dashboard
 </div>
 
 
+<!-- =========================================
+     RECENT ACTIVITY
+========================================= -->
+
+<div class="recent-activity">
+
+    <div class="recent-activity-header">
+
+        <div>
+
+            <h2>
+                Recent Activity
+            </h2>
+
+            <p>
+                Latest activity across NovaOps.
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('audit_logs') }}" class="secondary-btn">
+            View Audit Logs
+        </a>
+
+    </div>
+
+
+    <div class="activity-list">
+
+        {% for activity in recent_activity %}
+
+        <div class="activity-item">
+
+
+            <!-- Activity Indicator -->
+
+            <div class="activity-indicator
+                {% if activity.action == 'CREATE' %}
+                    activity-create
+                {% elif activity.action == 'UPDATE' %}
+                    activity-update
+                {% elif activity.action == 'DELETE' %}
+                    activity-delete
+                {% endif %}">
+            </div>
+
+
+            <!-- Activity Information -->
+
+            <div class="activity-info">
+
+                <div class="activity-top">
+
+                    <span class="activity-action
+                        {% if activity.action == 'CREATE' %}
+                            activity-create-text
+                        {% elif activity.action == 'UPDATE' %}
+                            activity-update-text
+                        {% elif activity.action == 'DELETE' %}
+                            activity-delete-text
+                        {% endif %}">
+                        {{ activity.action }}
+                    </span>
+
+
+                    <span class="activity-resource">
+                        {{ activity.entity_type }}
+                    </span>
+
+                </div>
+
+
+                <p>
+                    {{ activity.message }}
+                </p>
+
+            </div>
+
+
+            <!-- Time -->
+
+            <span class="activity-time">
+
+                {{ activity.created_at.strftime(
+                "%Y-%m-%d %H:%M"
+                ) }}
+
+            </span>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <h3>
+                No Activity Yet
+            </h3>
+
+            <p>
+                NovaOps activity will appear here.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
 {% endblock %}

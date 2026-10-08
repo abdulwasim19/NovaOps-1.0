@@ -30,6 +30,7 @@ def india_now():
     SQLite stores this as a naive datetime representing
     the India local clock time.
     """
+
     return datetime.now(
         ZoneInfo("Asia/Kolkata")
     ).replace(tzinfo=None)
@@ -170,6 +171,163 @@ class Deployment(db.Model):
     )
 
 
+class AuditLog(db.Model):
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    action = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    entity_type = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    entity_id = db.Column(
+        db.Integer,
+        nullable=True
+    )
+
+    message = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=india_now,
+        nullable=False
+    )
+
+
+# =========================================
+# AUDIT LOG HELPER
+# =========================================
+
+def create_audit_log(
+    action,
+    entity_type,
+    entity_id,
+    message
+):
+    """
+    Add an audit log entry to the current
+    database transaction.
+    """
+
+    log = AuditLog(
+        action=action,
+        entity_type=entity_type,
+        entity_id=entity_id,
+        message=message
+    )
+
+    db.session.add(log)
+
+
+# =========================================
+# BASELINE AUDIT LOGS
+# =========================================
+
+def seed_existing_audit_logs():
+    """
+    Create baseline entries for resources that
+    existed before Audit Logs were introduced.
+
+    These are NOT historical timestamps.
+    They simply mark resources that already existed
+    when the audit system was enabled.
+    """
+
+    # -----------------------------------------
+    # EXISTING PROJECTS
+    # -----------------------------------------
+
+    projects = Project.query.all()
+
+    for project in projects:
+
+        existing_log = AuditLog.query.filter_by(
+            action="BASELINE",
+            entity_type="Project",
+            entity_id=project.id
+        ).first()
+
+        if not existing_log:
+
+            create_audit_log(
+                "BASELINE",
+                "Project",
+                project.id,
+                (
+                    f"Existing project '{project.name}' "
+                    "was present before audit logging "
+                    "was enabled."
+                )
+            )
+
+    # -----------------------------------------
+    # EXISTING SERVERS
+    # -----------------------------------------
+
+    servers = Server.query.all()
+
+    for server in servers:
+
+        existing_log = AuditLog.query.filter_by(
+            action="BASELINE",
+            entity_type="Server",
+            entity_id=server.id
+        ).first()
+
+        if not existing_log:
+
+            create_audit_log(
+                "BASELINE",
+                "Server",
+                server.id,
+                (
+                    f"Existing server '{server.name}' "
+                    "was present before audit logging "
+                    "was enabled."
+                )
+            )
+
+    # -----------------------------------------
+    # EXISTING DEPLOYMENTS
+    # -----------------------------------------
+
+    deployments = Deployment.query.all()
+
+    for deployment in deployments:
+
+        existing_log = AuditLog.query.filter_by(
+            action="BASELINE",
+            entity_type="Deployment",
+            entity_id=deployment.id
+        ).first()
+
+        if not existing_log:
+
+            create_audit_log(
+                "BASELINE",
+                "Deployment",
+                deployment.id,
+                (
+                    f"Existing deployment "
+                    f"'{deployment.version}' was present "
+                    "before audit logging was enabled."
+                )
+            )
+
+    db.session.commit()
+
+
 # =========================================
 # DASHBOARD
 # =========================================
@@ -177,13 +335,19 @@ class Deployment(db.Model):
 @app.route("/")
 def dashboard():
 
+    # -----------------------------------------
+    # BASIC COUNTS
+    # -----------------------------------------
+
     project_count = Project.query.count()
 
     server_count = Server.query.count()
 
     deployment_count = Deployment.query.count()
 
-    # Deployment statistics
+    # -----------------------------------------
+    # DEPLOYMENT STATISTICS
+    # -----------------------------------------
 
     successful_deployments = Deployment.query.filter_by(
         status="Successful"
@@ -197,7 +361,9 @@ def dashboard():
         status="Failed"
     ).count()
 
-    # Server health
+    # -----------------------------------------
+    # SERVER HEALTH
+    # -----------------------------------------
 
     running_servers = Server.query.filter_by(
         status="Running"
@@ -221,17 +387,33 @@ def dashboard():
 
         health = 0
 
-    # Recent data
+    # -----------------------------------------
+    # RECENT PROJECTS
+    # -----------------------------------------
 
     recent_projects = Project.query.order_by(
         Project.id.desc()
     ).limit(5).all()
 
+    # -----------------------------------------
+    # RECENT DEPLOYMENTS
+    # -----------------------------------------
+
     recent_deployments = Deployment.query.order_by(
         Deployment.deployed_at.desc()
     ).limit(5).all()
 
-    # Dashboard data
+    # -----------------------------------------
+    # RECENT ACTIVITY
+    # -----------------------------------------
+
+    recent_activity = AuditLog.query.order_by(
+        AuditLog.created_at.desc()
+    ).limit(8).all()
+
+    # -----------------------------------------
+    # DASHBOARD DATA
+    # -----------------------------------------
 
     stats = {
         "projects": project_count,
@@ -258,7 +440,8 @@ def dashboard():
         deployment_stats=deployment_stats,
         server_stats=server_stats,
         recent_projects=recent_projects,
-        recent_deployments=recent_deployments
+        recent_deployments=recent_deployments,
+        recent_activity=recent_activity
     )
 
 
@@ -279,7 +462,10 @@ def projects():
     )
 
 
-@app.route("/projects/new", methods=["GET", "POST"])
+@app.route(
+    "/projects/new",
+    methods=["GET", "POST"]
+)
 def new_project():
 
     if request.method == "POST":
@@ -298,6 +484,16 @@ def new_project():
 
         db.session.add(project)
 
+        # Generate ID before audit entry
+        db.session.flush()
+
+        create_audit_log(
+            "CREATE",
+            "Project",
+            project.id,
+            f"Project '{project.name}' was created."
+        )
+
         db.session.commit()
 
         return redirect(
@@ -309,7 +505,10 @@ def new_project():
     )
 
 
-@app.route("/projects/edit/<int:project_id>", methods=["GET", "POST"])
+@app.route(
+    "/projects/edit/<int:project_id>",
+    methods=["GET", "POST"]
+)
 def edit_project(project_id):
 
     project = Project.query.get_or_404(
@@ -324,6 +523,13 @@ def edit_project(project_id):
 
         project.status = request.form["status"]
 
+        create_audit_log(
+            "UPDATE",
+            "Project",
+            project.id,
+            f"Project '{project.name}' was updated."
+        )
+
         db.session.commit()
 
         return redirect(
@@ -336,14 +542,28 @@ def edit_project(project_id):
     )
 
 
-@app.route("/projects/delete/<int:project_id>", methods=["POST"])
+@app.route(
+    "/projects/delete/<int:project_id>",
+    methods=["POST"]
+)
 def delete_project(project_id):
 
     project = Project.query.get_or_404(
         project_id
     )
 
+    project_name = project.name
+
+    project_id_value = project.id
+
     db.session.delete(project)
+
+    create_audit_log(
+        "DELETE",
+        "Project",
+        project_id_value,
+        f"Project '{project_name}' was deleted."
+    )
 
     db.session.commit()
 
@@ -356,14 +576,18 @@ def delete_project(project_id):
 # PROJECT DETAIL
 # =========================================
 
-@app.route("/projects/<int:project_id>")
+@app.route(
+    "/projects/<int:project_id>"
+)
 def project_detail(project_id):
 
     project = Project.query.get_or_404(
         project_id
     )
 
-    # Project servers
+    # -----------------------------------------
+    # PROJECT SERVERS
+    # -----------------------------------------
 
     servers = Server.query.filter_by(
         project_id=project.id
@@ -371,7 +595,9 @@ def project_detail(project_id):
         Server.name.asc()
     ).all()
 
-    # Server health
+    # -----------------------------------------
+    # SERVER HEALTH
+    # -----------------------------------------
 
     running_servers = Server.query.filter_by(
         project_id=project.id,
@@ -400,7 +626,9 @@ def project_detail(project_id):
 
         health = 0
 
-    # Deployment statistics
+    # -----------------------------------------
+    # DEPLOYMENT STATISTICS
+    # -----------------------------------------
 
     total_deployments = Deployment.query.filter_by(
         project_id=project.id
@@ -421,7 +649,9 @@ def project_detail(project_id):
         status="Failed"
     ).count()
 
-    # Recent deployments
+    # -----------------------------------------
+    # RECENT DEPLOYMENTS
+    # -----------------------------------------
 
     recent_deployments = Deployment.query.filter_by(
         project_id=project.id
@@ -478,7 +708,9 @@ def servers():
 
     query = Server.query
 
-    # Search
+    # -----------------------------------------
+    # SEARCH
+    # -----------------------------------------
 
     if search:
 
@@ -493,7 +725,9 @@ def servers():
             )
         )
 
-    # Provider filter
+    # -----------------------------------------
+    # PROVIDER FILTER
+    # -----------------------------------------
 
     if provider:
 
@@ -501,7 +735,9 @@ def servers():
             Server.provider == provider
         )
 
-    # Status filter
+    # -----------------------------------------
+    # STATUS FILTER
+    # -----------------------------------------
 
     if status:
 
@@ -522,7 +758,10 @@ def servers():
     )
 
 
-@app.route("/servers/new", methods=["GET", "POST"])
+@app.route(
+    "/servers/new",
+    methods=["GET", "POST"]
+)
 def new_server():
 
     projects = Project.query.order_by(
@@ -564,6 +803,15 @@ def new_server():
 
         db.session.add(server)
 
+        db.session.flush()
+
+        create_audit_log(
+            "CREATE",
+            "Server",
+            server.id,
+            f"Server '{server.name}' was created."
+        )
+
         db.session.commit()
 
         return redirect(
@@ -576,7 +824,10 @@ def new_server():
     )
 
 
-@app.route("/servers/edit/<int:server_id>", methods=["GET", "POST"])
+@app.route(
+    "/servers/edit/<int:server_id>",
+    methods=["GET", "POST"]
+)
 def edit_server(server_id):
 
     server = Server.query.get_or_404(
@@ -613,6 +864,13 @@ def edit_server(server_id):
 
             server.project_id = None
 
+        create_audit_log(
+            "UPDATE",
+            "Server",
+            server.id,
+            f"Server '{server.name}' was updated."
+        )
+
         db.session.commit()
 
         return redirect(
@@ -626,14 +884,28 @@ def edit_server(server_id):
     )
 
 
-@app.route("/servers/delete/<int:server_id>", methods=["POST"])
+@app.route(
+    "/servers/delete/<int:server_id>",
+    methods=["POST"]
+)
 def delete_server(server_id):
 
     server = Server.query.get_or_404(
         server_id
     )
 
+    server_name = server.name
+
+    server_id_value = server.id
+
     db.session.delete(server)
+
+    create_audit_log(
+        "DELETE",
+        "Server",
+        server_id_value,
+        f"Server '{server_name}' was deleted."
+    )
 
     db.session.commit()
 
@@ -646,7 +918,9 @@ def delete_server(server_id):
 # PROJECT SERVERS API
 # =========================================
 
-@app.route("/api/projects/<int:project_id>/servers")
+@app.route(
+    "/api/projects/<int:project_id>/servers"
+)
 def project_servers(project_id):
 
     servers = Server.query.filter_by(
@@ -693,7 +967,9 @@ def deployments():
 
     query = Deployment.query
 
-    # Search
+    # -----------------------------------------
+    # SEARCH
+    # -----------------------------------------
 
     if search:
 
@@ -715,7 +991,9 @@ def deployments():
             )
         )
 
-    # Project filter
+    # -----------------------------------------
+    # PROJECT FILTER
+    # -----------------------------------------
 
     if project_id:
 
@@ -725,7 +1003,9 @@ def deployments():
             )
         )
 
-    # Environment filter
+    # -----------------------------------------
+    # ENVIRONMENT FILTER
+    # -----------------------------------------
 
     if environment:
 
@@ -733,7 +1013,9 @@ def deployments():
             Deployment.environment == environment
         )
 
-    # Status filter
+    # -----------------------------------------
+    # STATUS FILTER
+    # -----------------------------------------
 
     if status:
 
@@ -760,7 +1042,10 @@ def deployments():
     )
 
 
-@app.route("/deployments/new", methods=["GET", "POST"])
+@app.route(
+    "/deployments/new",
+    methods=["GET", "POST"]
+)
 def new_deployment():
 
     projects = Project.query.order_by(
@@ -791,7 +1076,9 @@ def new_deployment():
             "status"
         )
 
-        # Required fields
+        # -----------------------------------------
+        # VALIDATE REQUIRED FIELDS
+        # -----------------------------------------
 
         if not project_id or not server_id:
 
@@ -809,13 +1096,17 @@ def new_deployment():
 
         server_id = int(server_id)
 
-        # Find server
+        # -----------------------------------------
+        # FIND SERVER
+        # -----------------------------------------
 
         server = Server.query.get_or_404(
             server_id
         )
 
-        # Validate project-server relationship
+        # -----------------------------------------
+        # VALIDATE RELATIONSHIP
+        # -----------------------------------------
 
         if server.project_id != project_id:
 
@@ -830,7 +1121,9 @@ def new_deployment():
                 error=error
             )
 
-        # Create deployment
+        # -----------------------------------------
+        # CREATE DEPLOYMENT
+        # -----------------------------------------
 
         deployment = Deployment(
             project_id=project_id,
@@ -841,6 +1134,19 @@ def new_deployment():
         )
 
         db.session.add(deployment)
+
+        db.session.flush()
+
+        create_audit_log(
+            "CREATE",
+            "Deployment",
+            deployment.id,
+            (
+                f"Deployment '{deployment.version}' "
+                f"was created for project "
+                f"'{deployment.project.name}'."
+            )
+        )
 
         db.session.commit()
 
@@ -893,9 +1199,9 @@ def edit_deployment(deployment_id):
             "status"
         )
 
-        # =========================================
+        # -----------------------------------------
         # VALIDATE REQUIRED FIELDS
-        # =========================================
+        # -----------------------------------------
 
         if not project_id or not server_id:
 
@@ -914,17 +1220,17 @@ def edit_deployment(deployment_id):
 
         server_id = int(server_id)
 
-        # =========================================
+        # -----------------------------------------
         # FIND SERVER
-        # =========================================
+        # -----------------------------------------
 
         server = Server.query.get_or_404(
             server_id
         )
 
-        # =========================================
-        # VALIDATE PROJECT-SERVER RELATIONSHIP
-        # =========================================
+        # -----------------------------------------
+        # VALIDATE RELATIONSHIP
+        # -----------------------------------------
 
         if server.project_id != project_id:
 
@@ -940,9 +1246,9 @@ def edit_deployment(deployment_id):
                 error=error
             )
 
-        # =========================================
+        # -----------------------------------------
         # UPDATE DEPLOYMENT
-        # =========================================
+        # -----------------------------------------
 
         deployment.project_id = project_id
 
@@ -953,6 +1259,16 @@ def edit_deployment(deployment_id):
         deployment.version = version
 
         deployment.status = status
+
+        create_audit_log(
+            "UPDATE",
+            "Deployment",
+            deployment.id,
+            (
+                f"Deployment '{deployment.version}' "
+                "was updated."
+            )
+        )
 
         db.session.commit()
 
@@ -968,14 +1284,28 @@ def edit_deployment(deployment_id):
     )
 
 
-@app.route("/deployments/delete/<int:deployment_id>", methods=["POST"])
+@app.route(
+    "/deployments/delete/<int:deployment_id>",
+    methods=["POST"]
+)
 def delete_deployment(deployment_id):
 
     deployment = Deployment.query.get_or_404(
         deployment_id
     )
 
+    deployment_version = deployment.version
+
+    deployment_id_value = deployment.id
+
     db.session.delete(deployment)
+
+    create_audit_log(
+        "DELETE",
+        "Deployment",
+        deployment_id_value,
+        f"Deployment '{deployment_version}' was deleted."
+    )
 
     db.session.commit()
 
@@ -985,11 +1315,31 @@ def delete_deployment(deployment_id):
 
 
 # =========================================
+# AUDIT LOG ROUTE
+# =========================================
+
+@app.route("/audit-logs")
+def audit_logs():
+
+    logs = AuditLog.query.order_by(
+        AuditLog.created_at.desc()
+    ).limit(100).all()
+
+    return render_template(
+        "audit_logs.html",
+        logs=logs
+    )
+
+
+# =========================================
 # DATABASE
 # =========================================
 
 with app.app_context():
+
     db.create_all()
+
+    seed_existing_audit_logs()
 
 
 # =========================================
@@ -997,4 +1347,7 @@ with app.app_context():
 # =========================================
 
 if __name__ == "__main__":
-    app.run(debug=True)
+
+    app.run(
+        debug=True
+    )
