@@ -1682,3 +1682,314 @@ body {
         width: 100%;
     }
 }
+
+
+/* =========================================
+   PROJECT DETAIL
+========================================= */
+
+.project-detail-overview {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    padding: 26px 28px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+}
+
+.project-detail-main {
+    min-width: 0;
+}
+
+.project-detail-label {
+    color: #6b7280;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+}
+
+.project-detail-main h2 {
+    margin-top: 10px;
+
+    font-size: 24px;
+
+    color: #111827;
+}
+
+.project-detail-main p {
+    margin-top: 6px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+.project-health {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 5px;
+}
+
+.project-health span {
+    color: #6b7280;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.project-health strong {
+    font-size: 30px;
+
+    color: #16a34a;
+}
+
+
+/* =========================================
+   PROJECT DETAIL STATS
+========================================= */
+
+.project-detail-stats {
+    display: grid;
+
+    grid-template-columns: repeat(3,
+            minmax(0, 1fr));
+
+    gap: 16px;
+
+    margin-top: 20px;
+}
+
+.project-detail-stat {
+    padding: 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+}
+
+.project-detail-stat span {
+    color: #6b7280;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+}
+
+.project-detail-stat strong {
+    display: block;
+
+    margin-top: 10px;
+
+    font-size: 28px;
+
+    color: #111827;
+}
+
+
+/* =========================================
+   PROJECT DETAIL SECTIONS
+========================================= */
+
+.project-detail-section {
+    margin-top: 30px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    padding: 26px 28px;
+}
+
+.project-detail-section-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 10px;
+}
+
+.project-detail-section-header h2 {
+    font-size: 19px;
+
+    color: #111827;
+}
+
+.project-detail-section-header p {
+    margin-top: 5px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   PROJECT SERVERS
+========================================= */
+
+.project-server-item {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 18px 0;
+
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.project-server-item:last-child {
+    border-bottom: none;
+}
+
+.project-server-info {
+    min-width: 0;
+}
+
+.project-server-info h3 {
+    margin-bottom: 6px;
+
+    color: #111827;
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+.project-server-info p {
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   PROJECT DEPLOYMENTS
+========================================= */
+
+.project-deployment-item {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr) 120px 140px;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 18px 0;
+
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.project-deployment-item:last-child {
+    border-bottom: none;
+}
+
+.project-deployment-info h3 {
+    margin-bottom: 6px;
+
+    color: #111827;
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+.project-deployment-info p {
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+.project-deployment-item .deployment-time {
+    text-align: right;
+}
+
+
+/* =========================================
+   PROJECT DETAIL RESPONSIVE
+========================================= */
+
+@media (max-width: 800px) {
+
+    .project-detail-overview {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .project-health {
+        align-items: flex-start;
+    }
+
+    .project-detail-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .project-server-item {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .project-deployment-item {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+    .project-deployment-item .deployment-time {
+        text-align: left;
+    }
+}
+
+
+/* =========================================
+   PROJECT DEPLOYMENT OVERVIEW
+========================================= */
+
+.project-deployment-overview {
+    margin-top: 30px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    padding: 26px 28px;
+}
+
+.project-deployment-overview .deployment-summary-grid {
+    margin-top: 20px;
+}

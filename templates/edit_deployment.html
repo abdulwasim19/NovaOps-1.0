@@ -13,8 +13,15 @@ Edit Deployment
 <div class="welcome">
 
     <div>
-        <h1>Edit Deployment</h1>
-        <p>Update deployment configuration and status.</p>
+
+        <h1>
+            Edit Deployment
+        </h1>
+
+        <p>
+            Update deployment configuration and status.
+        </p>
+
     </div>
 
 </div>
@@ -22,9 +29,20 @@ Edit Deployment
 
 <div class="form-card">
 
+    {% if error %}
+
+    <div class="form-error">
+        {{ error }}
+    </div>
+
+    {% endif %}
+
+
     <form method="POST">
 
-        <!-- Project -->
+        <!-- =========================================
+             PROJECT
+        ========================================= -->
 
         <div class="form-group">
 
@@ -51,7 +69,9 @@ Edit Deployment
         </div>
 
 
-        <!-- Server -->
+        <!-- =========================================
+             SERVER
+        ========================================= -->
 
         <div class="form-group">
 
@@ -59,26 +79,20 @@ Edit Deployment
                 Server
             </label>
 
-            <select id="server_id" name="server_id" required>
+            <select id="server_id" name="server_id" required disabled>
 
                 <option value="">
-                    Select Server
+                    Loading servers...
                 </option>
-
-                {% for server in servers %}
-
-                <option value="{{ server.id }}" {% if deployment.server_id==server.id %} selected {% endif %}>
-                    {{ server.name }}
-                </option>
-
-                {% endfor %}
 
             </select>
 
         </div>
 
 
-        <!-- Environment -->
+        <!-- =========================================
+             ENVIRONMENT
+        ========================================= -->
 
         <div class="form-group">
 
@@ -105,7 +119,9 @@ Edit Deployment
         </div>
 
 
-        <!-- Version -->
+        <!-- =========================================
+             VERSION
+        ========================================= -->
 
         <div class="form-group">
 
@@ -119,7 +135,9 @@ Edit Deployment
         </div>
 
 
-        <!-- Status -->
+        <!-- =========================================
+             STATUS
+        ========================================= -->
 
         <div class="form-group">
 
@@ -146,7 +164,9 @@ Edit Deployment
         </div>
 
 
-        <!-- Actions -->
+        <!-- =========================================
+             FORM ACTIONS
+        ========================================= -->
 
         <div class="form-actions">
 
@@ -163,5 +183,218 @@ Edit Deployment
     </form>
 
 </div>
+
+
+<script>
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const projectSelect =
+                document.getElementById("project_id");
+
+            const serverSelect =
+                document.getElementById("server_id");
+
+
+            const currentServerId =
+                "{{ deployment.server_id }}";
+
+
+            async function loadServers(projectId) {
+
+                serverSelect.innerHTML = "";
+
+                serverSelect.disabled = true;
+
+
+                if (!projectId) {
+
+                    const option =
+                        document.createElement("option");
+
+                    option.value = "";
+
+                    option.textContent =
+                        "Select a project first";
+
+                    serverSelect.appendChild(option);
+
+                    return;
+                }
+
+
+                const loadingOption =
+                    document.createElement("option");
+
+                loadingOption.value = "";
+
+                loadingOption.textContent =
+                    "Loading servers...";
+
+                serverSelect.appendChild(
+                    loadingOption
+                );
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `/api/projects/${projectId}/servers`
+                        );
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "Failed to load servers"
+                        );
+
+                    }
+
+
+                    const servers =
+                        await response.json();
+
+
+                    serverSelect.innerHTML = "";
+
+
+                    if (servers.length === 0) {
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+                        option.value = "";
+
+                        option.textContent =
+                            "No servers assigned to this project";
+
+                        serverSelect.appendChild(
+                            option
+                        );
+
+                        serverSelect.disabled = true;
+
+                        return;
+                    }
+
+
+                    const defaultOption =
+                        document.createElement(
+                            "option"
+                        );
+
+                    defaultOption.value = "";
+
+                    defaultOption.textContent =
+                        "Select Server";
+
+                    serverSelect.appendChild(
+                        defaultOption
+                    );
+
+
+                    servers.forEach(
+                        function (server) {
+
+                            const option =
+                                document.createElement(
+                                    "option"
+                                );
+
+
+                            option.value =
+                                server.id;
+
+                            option.textContent =
+                                server.name;
+
+
+                            if (
+                                String(server.id) ===
+                                String(currentServerId)
+                            ) {
+
+                                option.selected = true;
+
+                            }
+
+
+                            serverSelect.appendChild(
+                                option
+                            );
+
+                        }
+                    );
+
+
+                    serverSelect.disabled = false;
+
+                } catch (error) {
+
+                    console.error(
+                        "Unable to load servers:",
+                        error
+                    );
+
+
+                    serverSelect.innerHTML = "";
+
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+                    option.value = "";
+
+                    option.textContent =
+                        "Unable to load servers";
+
+                    serverSelect.appendChild(
+                        option
+                    );
+
+                    serverSelect.disabled = true;
+
+                }
+
+            }
+
+
+            /*
+             * Load the current project's servers
+             * when the page opens.
+             */
+
+            loadServers(
+                projectSelect.value
+            );
+
+
+            /*
+             * Reload servers when project changes.
+             */
+
+            projectSelect.addEventListener(
+                "change",
+                function () {
+
+                    loadServers(
+                        this.value
+                    );
+
+                }
+            );
+
+        }
+    );
+
+</script>
 
 {% endblock %}

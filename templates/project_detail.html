@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+
+{% block title %}
+NovaOps | {{ project.name }}
+{% endblock %}
+
+{% block page_title %}
+Project Details
+{% endblock %}
+
+{% block content %}
+
+<div class="welcome">
+
+    <div>
+
+        <h1>
+            {{ project.name }}
+        </h1>
+
+        <p>
+            {{ project.description }}
+        </p>
+
+    </div>
+
+    <a href="{{ url_for('projects') }}" class="secondary-btn">
+        ← Back to Projects
+    </a>
+
+</div>
+
+
+<!-- =========================================
+     PROJECT OVERVIEW
+========================================= -->
+
+<div class="project-detail-overview">
+
+    <div class="project-detail-main">
+
+        <span class="project-detail-label">
+            Project Status
+        </span>
+
+        <h2>
+            {{ project.status }}
+        </h2>
+
+        <p>
+            Operational overview and infrastructure information.
+        </p>
+
+    </div>
+
+
+    <div class="project-health">
+
+        <span>
+            Infrastructure Health
+        </span>
+
+        <strong>
+            {{ health }}%
+        </strong>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     PROJECT STATISTICS
+========================================= -->
+
+<div class="project-detail-stats">
+
+    <div class="project-detail-stat">
+
+        <span>
+            Servers
+        </span>
+
+        <strong>
+            {{ server_stats.total }}
+        </strong>
+
+    </div>
+
+
+    <div class="project-detail-stat">
+
+        <span>
+            Deployments
+        </span>
+
+        <strong>
+            {{ deployment_stats.total }}
+        </strong>
+
+    </div>
+
+
+    <div class="project-detail-stat">
+
+        <span>
+            Running Servers
+        </span>
+
+        <strong>
+            {{ server_stats.running }}
+        </strong>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     DEPLOYMENT OVERVIEW
+========================================= -->
+
+<div class="project-deployment-overview">
+
+    <div class="project-detail-section-header">
+
+        <div>
+
+            <h2>
+                Deployment Overview
+            </h2>
+
+            <p>
+                Current deployment status for this project.
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('deployments', project_id=project.id) }}" class="secondary-btn">
+            View Deployments
+        </a>
+
+    </div>
+
+
+    <div class="deployment-summary-grid">
+
+        <div class="deployment-summary-card">
+
+            <span class="deployment-summary-label">
+                Successful
+            </span>
+
+            <h3>
+                {{ deployment_stats.successful }}
+            </h3>
+
+        </div>
+
+
+        <div class="deployment-summary-card">
+
+            <span class="deployment-summary-label">
+                In Progress
+            </span>
+
+            <h3>
+                {{ deployment_stats.in_progress }}
+            </h3>
+
+        </div>
+
+
+        <div class="deployment-summary-card">
+
+            <span class="deployment-summary-label">
+                Failed
+            </span>
+
+            <h3>
+                {{ deployment_stats.failed }}
+            </h3>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     SERVERS
+========================================= -->
+
+<div class="project-detail-section">
+
+    <div class="project-detail-section-header">
+
+        <div>
+
+            <h2>
+                Infrastructure Servers
+            </h2>
+
+            <p>
+                Servers assigned to this project.
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('new_server') }}" class="secondary-btn">
+            + Add Server
+        </a>
+
+    </div>
+
+
+    <div class="project-server-list">
+
+        {% for server in servers %}
+
+        <div class="project-server-item">
+
+            <div class="project-server-info">
+
+                <h3>
+                    {{ server.name }}
+                </h3>
+
+                <p>
+                    {{ server.ip_address }}
+                    •
+                    {{ server.provider }}
+                    •
+                    {{ server.region }}
+                </p>
+
+            </div>
+
+
+            <span class="server-status
+                {% if server.status == 'Running' %}
+                    status-running
+                {% elif server.status == 'Stopped' %}
+                    status-stopped
+                {% elif server.status == 'Failed' %}
+                    status-failed
+                {% endif %}">
+
+                <span class="status-indicator"></span>
+
+                {{ server.status }}
+
+            </span>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <h3>
+                No Servers Assigned
+            </h3>
+
+            <p>
+                This project does not have any infrastructure servers yet.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     DEPLOYMENTS
+========================================= -->
+
+<div class="project-detail-section">
+
+    <div class="project-detail-section-header">
+
+        <div>
+
+            <h2>
+                Recent Deployments
+            </h2>
+
+            <p>
+                Latest deployments for this project.
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('new_deployment') }}" class="secondary-btn">
+            + New Deployment
+        </a>
+
+    </div>
+
+
+    <div class="project-deployment-list">
+
+        {% for deployment in recent_deployments %}
+
+        <div class="project-deployment-item">
+
+            <div class="project-deployment-info">
+
+                <h3>
+                    {{ deployment.version }}
+                </h3>
+
+                <p>
+                    {{ deployment.server.name }}
+                    •
+                    {{ deployment.environment }}
+                </p>
+
+            </div>
+
+
+            <span class="server-status
+                {% if deployment.status == 'Successful' %}
+                    status-running
+                {% elif deployment.status == 'In Progress' %}
+                    status-progress
+                {% elif deployment.status == 'Failed' %}
+                    status-failed
+                {% endif %}">
+
+                <span class="status-indicator"></span>
+
+                {{ deployment.status }}
+
+            </span>
+
+
+            <span class="deployment-time">
+
+                {{ deployment.deployed_at.strftime(
+                "%Y-%m-%d %H:%M"
+                ) }}
+
+            </span>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <h3>
+                No Deployments Yet
+            </h3>
+
+            <p>
+                Deployment history for this project will appear here.
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}
