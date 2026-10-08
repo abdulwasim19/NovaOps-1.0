@@ -22,9 +22,18 @@ New Deployment
 
 <div class="form-card">
 
+    {% if error %}
+
+    <div class="form-error">
+        {{ error }}
+    </div>
+
+    {% endif %}
+
+
     <form method="POST">
 
-        <!-- Project -->
+        <!-- PROJECT -->
 
         <div class="form-group">
 
@@ -51,7 +60,7 @@ New Deployment
         </div>
 
 
-        <!-- Server -->
+        <!-- SERVER -->
 
         <div class="form-group">
 
@@ -59,26 +68,18 @@ New Deployment
                 Server
             </label>
 
-            <select id="server_id" name="server_id" required>
+            <select id="server_id" name="server_id" required disabled>
 
                 <option value="">
-                    Select Server
+                    Select a project first
                 </option>
-
-                {% for server in servers %}
-
-                <option value="{{ server.id }}">
-                    {{ server.name }}
-                </option>
-
-                {% endfor %}
 
             </select>
 
         </div>
 
 
-        <!-- Environment -->
+        <!-- ENVIRONMENT -->
 
         <div class="form-group">
 
@@ -109,7 +110,7 @@ New Deployment
         </div>
 
 
-        <!-- Version -->
+        <!-- VERSION -->
 
         <div class="form-group">
 
@@ -122,7 +123,7 @@ New Deployment
         </div>
 
 
-        <!-- Status -->
+        <!-- STATUS -->
 
         <div class="form-group">
 
@@ -149,7 +150,7 @@ New Deployment
         </div>
 
 
-        <!-- Actions -->
+        <!-- ACTIONS -->
 
         <div class="form-actions">
 
@@ -166,5 +167,136 @@ New Deployment
     </form>
 
 </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const projectSelect = document.getElementById("project_id");
+        const serverSelect = document.getElementById("server_id");
+
+
+        projectSelect.addEventListener("change", async function () {
+
+            const projectId = this.value;
+
+
+            // Reset server dropdown
+            serverSelect.innerHTML = "";
+
+            serverSelect.disabled = true;
+
+
+            if (!projectId) {
+
+                const option = document.createElement("option");
+
+                option.value = "";
+                option.textContent = "Select a project first";
+
+                serverSelect.appendChild(option);
+
+                return;
+            }
+
+
+            // Loading state
+            const loadingOption = document.createElement("option");
+
+            loadingOption.value = "";
+            loadingOption.textContent = "Loading servers...";
+
+            serverSelect.appendChild(loadingOption);
+
+
+            try {
+
+                const response = await fetch(
+                    `/api/projects/${projectId}/servers`
+                );
+
+
+                if (!response.ok) {
+                    throw new Error(
+                        `Server request failed: ${response.status}`
+                    );
+                }
+
+
+                const servers = await response.json();
+
+
+                // Clear loading option
+                serverSelect.innerHTML = "";
+
+
+                // No servers
+                if (servers.length === 0) {
+
+                    const option = document.createElement("option");
+
+                    option.value = "";
+                    option.textContent =
+                        "No servers assigned to this project";
+
+                    serverSelect.appendChild(option);
+
+                    serverSelect.disabled = true;
+
+                    return;
+                }
+
+
+                // Default option
+                const defaultOption = document.createElement("option");
+
+                defaultOption.value = "";
+                defaultOption.textContent = "Select Server";
+                defaultOption.selected = true;
+
+                serverSelect.appendChild(defaultOption);
+
+
+                // Add servers
+                servers.forEach(function (server) {
+
+                    const option = document.createElement("option");
+
+                    option.value = server.id;
+                    option.textContent = server.name;
+
+                    serverSelect.appendChild(option);
+
+                });
+
+
+                // IMPORTANT:
+                // Enable the select so server_id is submitted
+                serverSelect.disabled = false;
+
+            } catch (error) {
+
+                console.error(
+                    "Unable to load servers:",
+                    error
+                );
+
+
+                serverSelect.innerHTML = "";
+
+                const option = document.createElement("option");
+
+                option.value = "";
+                option.textContent = "Unable to load servers";
+
+                serverSelect.appendChild(option);
+
+                serverSelect.disabled = true;
+            }
+
+        });
+
+    });
+</script>
 
 {% endblock %}

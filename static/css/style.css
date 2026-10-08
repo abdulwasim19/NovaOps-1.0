@@ -1007,3 +1007,28 @@ body {
         padding: 20px;
     }
 }
+
+
+/* =========================================
+   FORM ERROR
+========================================= */
+
+.form-error {
+    margin-bottom: 20px;
+
+    padding: 12px 14px;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 10px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    line-height: 1.5;
+}

@@ -3,7 +3,7 @@
 # IMPORTS
 # =========================================
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -339,6 +339,24 @@ def delete_server(server_id):
     return redirect(url_for("servers"))
 
 
+@app.route("/api/projects/<int:project_id>/servers")
+def project_servers(project_id):
+
+    servers = Server.query.filter_by(
+        project_id=project_id
+    ).order_by(
+        Server.name.asc()
+    ).all()
+
+    return jsonify([
+        {
+            "id": server.id,
+            "name": server.name
+        }
+        for server in servers
+    ])
+
+
 # =========================================
 # DEPLOYMENT ROUTES
 # =========================================
@@ -363,21 +381,55 @@ def new_deployment():
         Project.name.asc()
     ).all()
 
-    servers = Server.query.order_by(
-        Server.name.asc()
-    ).all()
+    error = None
 
     if request.method == "POST":
 
-        project_id = request.form["project_id"]
-        server_id = request.form["server_id"]
-        environment = request.form["environment"]
-        version = request.form["version"]
-        status = request.form["status"]
+        project_id = request.form.get("project_id")
+        server_id = request.form.get("server_id")
+        environment = request.form.get("environment")
+        version = request.form.get("version")
+        status = request.form.get("status")
+
+        # Validate required fields
+
+        if not project_id or not server_id:
+
+            error = "Please select both a project and a server."
+
+            return render_template(
+                "new_deployment.html",
+                projects=projects,
+                error=error
+            )
+
+        project_id = int(project_id)
+        server_id = int(server_id)
+
+        # Find selected server
+
+        server = Server.query.get_or_404(server_id)
+
+        # Validate project-server relationship
+
+        if server.project_id != project_id:
+
+            error = (
+                "The selected server does not belong "
+                "to the selected project."
+            )
+
+            return render_template(
+                "new_deployment.html",
+                projects=projects,
+                error=error
+            )
+
+        # Create deployment
 
         deployment = Deployment(
-            project_id=int(project_id),
-            server_id=int(server_id),
+            project_id=project_id,
+            server_id=server_id,
             environment=environment,
             version=version,
             status=status
@@ -386,12 +438,14 @@ def new_deployment():
         db.session.add(deployment)
         db.session.commit()
 
-        return redirect(url_for("deployments"))
+        return redirect(
+            url_for("deployments")
+        )
 
     return render_template(
         "new_deployment.html",
         projects=projects,
-        servers=servers
+        error=error
     )
 
 
