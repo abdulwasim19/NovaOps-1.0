@@ -16,20 +16,65 @@ db = SQLAlchemy(app)
 # MODELS
 # =========================
 
+
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String(50), nullable=False)
+
+    name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    description = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    status = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    servers = db.relationship(
+        "Server",
+        backref="project",
+        lazy=True
+    )
 
 
 class Server(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    ip_address = db.Column(db.String(50), nullable=False)
-    provider = db.Column(db.String(50), nullable=False)
-    region = db.Column(db.String(50), nullable=False)
-    status = db.Column(db.String(50), nullable=False)
+
+    name = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    ip_address = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    provider = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    region = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    status = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    project_id = db.Column(
+        db.Integer,
+        db.ForeignKey("project.id"),
+        nullable=True
+    )
 
 
 # =========================
@@ -147,6 +192,8 @@ def servers():
 @app.route("/servers/new", methods=["GET", "POST"])
 def new_server():
 
+    projects = Project.query.all()
+
     if request.method == "POST":
 
         name = request.form["name"]
@@ -154,13 +201,15 @@ def new_server():
         provider = request.form["provider"]
         region = request.form["region"]
         status = request.form["status"]
+        project_id = request.form["project_id"]
 
         server = Server(
             name=name,
             ip_address=ip_address,
             provider=provider,
             region=region,
-            status=status
+            status=status,
+            project_id=project_id
         )
 
         db.session.add(server)
@@ -168,13 +217,20 @@ def new_server():
 
         return redirect(url_for("servers"))
 
-    return render_template("new_server.html")
+    return render_template(
+        "new_server.html",
+        projects=projects
+    )
 
 
 @app.route("/servers/edit/<int:server_id>", methods=["GET", "POST"])
 def edit_server(server_id):
 
     server = Server.query.get_or_404(server_id)
+
+    projects = Project.query.order_by(
+        Project.name.asc()
+    ).all()
 
     if request.method == "POST":
 
@@ -184,13 +240,21 @@ def edit_server(server_id):
         server.region = request.form["region"]
         server.status = request.form["status"]
 
+        project_id = request.form.get("project_id")
+
+        if project_id:
+            server.project_id = int(project_id)
+        else:
+            server.project_id = None
+
         db.session.commit()
 
         return redirect(url_for("servers"))
 
     return render_template(
         "edit_server.html",
-        server=server
+        server=server,
+        projects=projects
     )
 
 

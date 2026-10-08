@@ -14,36 +14,55 @@ Edit Server
 
     <div>
         <h1>Edit Server</h1>
-        <p>Update your infrastructure server details.</p>
+        <p>Update the configuration and project assignment of this server.</p>
     </div>
 
 </div>
+
 
 <div class="form-card">
 
     <form method="POST">
 
+        <!-- Server Name -->
+
         <div class="form-group">
 
-            <label for="name">Server Name</label>
+            <label for="name">
+                Server Name
+            </label>
 
-            <input type="text" id="name" name="name" value="{{ server.name }}" required>
+            <input type="text" id="name" name="name" value="{{ server.name }}" placeholder="e.g. Production Server"
+                required>
 
         </div>
 
+
+        <!-- IP Address -->
+
         <div class="form-group">
 
-            <label for="ip_address">IP Address</label>
+            <label for="ip_address">
+                IP Address
+            </label>
 
-            <input type="text" id="ip_address" name="ip_address" value="{{ server.ip_address }}" required>
+            <input type="text" id="ip_address" name="ip_address" value="{{ server.ip_address }}"
+                placeholder="e.g. 192.168.1.10" required>
 
         </div>
 
+
+        <!-- Provider -->
+
         <div class="form-group">
 
-            <label for="provider">Provider</label>
+            <label for="provider">
+                Provider
+            </label>
 
             <select id="provider" name="provider" required>
+
+                <option value="">Select Provider</option>
 
                 <option value="AWS" {% if server.provider=="AWS" %}selected{% endif %}>
                     AWS
@@ -65,17 +84,28 @@ Edit Server
 
         </div>
 
+
+        <!-- Region -->
+
         <div class="form-group">
 
-            <label for="region">Region</label>
+            <label for="region">
+                Region
+            </label>
 
-            <input type="text" id="region" name="region" value="{{ server.region }}" required>
+            <input type="text" id="region" name="region" value="{{ server.region }}" placeholder="e.g. ap-south-1"
+                required>
 
         </div>
 
+
+        <!-- Status -->
+
         <div class="form-group">
 
-            <label for="status">Status</label>
+            <label for="status">
+                Status
+            </label>
 
             <select id="status" name="status" required>
 
@@ -94,6 +124,36 @@ Edit Server
             </select>
 
         </div>
+
+
+        <!-- Project -->
+
+        <div class="form-group">
+
+            <label for="project_id">
+                Project
+            </label>
+
+            <select id="project_id" name="project_id">
+
+                <option value="">
+                    Unassigned
+                </option>
+
+                {% for project in projects %}
+
+                <option value="{{ project.id }}" {% if server.project_id==project.id %}selected{% endif %}>
+                    {{ project.name }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <!-- Form Actions -->
 
         <div class="form-actions">
 

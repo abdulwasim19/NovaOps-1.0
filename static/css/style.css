@@ -29,6 +29,7 @@ body {
     background: #111827;
     color: white;
     padding: 24px 16px;
+
     display: flex;
     flex-direction: column;
 }
@@ -52,10 +53,14 @@ body {
 .nav-item {
     text-decoration: none;
     color: #9ca3af;
+
     padding: 12px 14px;
+
     border-radius: 8px;
+
     display: flex;
     gap: 12px;
+
     transition: 0.2s;
 }
 
@@ -86,6 +91,7 @@ body {
 
 .navbar {
     height: 82px;
+
     background: white;
     border-bottom: 1px solid #e5e7eb;
 
@@ -110,13 +116,16 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+
     font-weight: 600;
 }
 
 .status-dot {
     width: 9px;
     height: 9px;
+
     background: #22c55e;
+
     border-radius: 50%;
 }
 
@@ -158,13 +167,16 @@ body {
     justify-content: center;
 
     border: none;
+
     background: #111827;
     color: white;
 
     padding: 12px 18px;
+
     border-radius: 8px;
 
     cursor: pointer;
+
     font-weight: 600;
     text-decoration: none;
 
@@ -199,6 +211,7 @@ body {
     min-height: 145px;
 
     border-radius: 14px;
+
     border: 1px solid #e5e7eb;
 
     display: flex;
@@ -210,6 +223,7 @@ body {
 
 .stat-card:hover {
     transform: translateY(-2px);
+
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
 }
 
@@ -221,6 +235,7 @@ body {
 
 .stat-label {
     color: #6b7280;
+
     font-size: 13px;
     font-weight: 600;
 }
@@ -238,6 +253,7 @@ body {
     margin-top: 10px;
 
     color: #9ca3af;
+
     font-size: 12px;
 }
 
@@ -252,6 +268,7 @@ body {
     background: white;
 
     border: 1px solid #e5e7eb;
+
     border-radius: 14px;
 
     padding: 26px 28px;
@@ -280,6 +297,7 @@ body {
     margin-top: 5px;
 
     color: #6b7280;
+
     font-size: 13px;
 }
 
@@ -407,6 +425,7 @@ body {
     background: white;
 
     border: 1px solid #e5e7eb;
+
     border-radius: 12px;
 
     padding: 25px;
@@ -443,6 +462,7 @@ body {
 
 .project-card p {
     color: #6b7280;
+
     line-height: 1.6;
 }
 
@@ -484,6 +504,7 @@ body {
 
 .secondary-btn {
     background: #f3f4f6;
+
     color: #374151;
 
     border: 1px solid #d1d5db;
@@ -495,6 +516,7 @@ body {
 
 .danger-btn {
     background: #fef2f2;
+
     color: #dc2626;
 
     border: 1px solid #fecaca;
@@ -517,7 +539,7 @@ body {
 
 
 /* =========================================
-   NEW PROJECT FORM
+   FORM CARD
 ========================================= */
 
 .form-card {
@@ -611,6 +633,41 @@ body {
 
 
 /* =========================================
+   FORM ACTIONS
+========================================= */
+
+.form-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-top: 10px;
+}
+
+.form-actions .primary-btn,
+.form-actions .secondary-btn {
+    padding: 12px 18px;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.form-actions .secondary-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* =========================================
    EMPTY STATE
 ========================================= */
 
@@ -633,8 +690,244 @@ body {
 
 
 /* =========================================
+   SERVERS
+========================================= */
+
+.server-card {
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+}
+
+.server-card-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 24px 28px;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.server-card-header h2 {
+    font-size: 18px;
+
+    color: #111827;
+}
+
+.server-card-header p {
+    margin-top: 5px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+.server-count {
+    padding: 7px 12px;
+
+    background: #f3f4f6;
+
+    color: #374151;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
+   SERVER TABLE
+========================================= */
+
+.server-table {
+    width: 100%;
+}
+
+.server-table-header,
+.server-row {
+    display: grid;
+
+    grid-template-columns:
+        1.5fr 1.5fr 1fr 1fr 1.2fr 100px 150px;
+
+    align-items: center;
+
+    column-gap: 20px;
+
+    padding: 18px 28px;
+}
+
+.server-table-header {
+    background: #f9fafb;
+
+    color: #6b7280;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+}
+
+.server-row {
+    border-top: 1px solid #f0f0f0;
+
+    color: #374151;
+
+    font-size: 13px;
+}
+
+.server-name {
+    font-weight: 600;
+
+    color: #111827;
+}
+
+.server-project {
+    font-weight: 600;
+
+    color: #4b5563;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================
+   SERVER STATUS
+========================================= */
+
+.server-status {
+    justify-self: start;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    background: #ecfdf5;
+
+    color: #16a34a;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
+   SERVER ACTIONS
+========================================= */
+
+.server-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-start;
+
+    gap: 8px;
+
+    white-space: nowrap;
+}
+
+.server-actions form {
+    display: flex;
+
+    margin: 0;
+}
+
+.server-actions .secondary-btn,
+.server-actions .danger-btn {
+    width: 64px;
+
+    height: 34px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    border-radius: 8px;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    box-sizing: border-box;
+
+    transition: all 0.2s ease;
+}
+
+.server-actions .secondary-btn {
+    background: #f3f4f6;
+
+    color: #374151;
+
+    border: 1px solid #d1d5db;
+}
+
+.server-actions .secondary-btn:hover {
+    background: #e5e7eb;
+
+    border-color: #cbd5e1;
+
+    transform: translateY(-1px);
+}
+
+.server-actions .danger-btn {
+    background: #fef2f2;
+
+    color: #dc2626;
+
+    border: 1px solid #fecaca;
+
+    cursor: pointer;
+}
+
+.server-actions .danger-btn:hover {
+    background: #fee2e2;
+
+    border-color: #fca5a5;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================
    RESPONSIVE
 ========================================= */
+
+@media (max-width: 1200px) {
+
+    .server-table {
+        overflow-x: auto;
+    }
+
+    .server-table-header,
+    .server-row {
+        min-width: 1050px;
+    }
+}
+
 
 @media (max-width: 1000px) {
 
@@ -699,213 +992,18 @@ body {
     .recent-project-info p {
         white-space: normal;
     }
-}
 
-/* =========================================
-   SERVERS
-========================================= */
+    .form-card {
+        margin: 20px 0;
 
-.server-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    overflow: hidden;
-}
+        padding: 22px;
+    }
 
-.server-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    .form-actions {
+        flex-wrap: wrap;
+    }
 
-    padding: 24px 28px;
-
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.server-card-header h2 {
-    font-size: 18px;
-    color: #111827;
-}
-
-.server-card-header p {
-    margin-top: 5px;
-    color: #6b7280;
-    font-size: 13px;
-}
-
-.server-count {
-    padding: 7px 12px;
-
-    background: #f3f4f6;
-    color: #374151;
-
-    border-radius: 20px;
-
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.server-table {
-    width: 100%;
-}
-
-.server-table-header,
-.server-row {
-    display: grid;
-
-    grid-template-columns:
-        1.5fr 1.5fr 1fr 1fr 100px;
-
-    align-items: center;
-
-    column-gap: 20px;
-
-    padding: 18px 28px;
-}
-
-.server-table-header {
-    background: #f9fafb;
-
-    color: #6b7280;
-
-    font-size: 12px;
-    font-weight: 600;
-
-    text-transform: uppercase;
-}
-
-.server-row {
-    border-top: 1px solid #f0f0f0;
-
-    color: #374151;
-
-    font-size: 13px;
-}
-
-.server-name {
-    font-weight: 600;
-    color: #111827;
-}
-
-.server-status {
-    justify-self: start;
-
-    padding: 6px 10px;
-
-    border-radius: 20px;
-
-    background: #ecfdf5;
-    color: #16a34a;
-
-    font-size: 12px;
-    font-weight: 600;
-}
-
-/* =========================================
-   FORM ACTIONS
-========================================= */
-
-.form-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 10px;
-}
-
-.form-actions .primary-btn,
-.form-actions .secondary-btn {
-    padding: 12px 18px;
-    border-radius: 9px;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.form-actions .secondary-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* =========================================
-   SERVER ACTION BUTTON
-========================================= */
-
-.server-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.server-actions .secondary-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    min-width: 64px;
-    height: 34px;
-
-    padding: 0 12px;
-
-    border-radius: 8px;
-
-    background: #f3f4f6;
-    color: #374151;
-
-    border: 1px solid #d1d5db;
-
-    font-size: 12px;
-    font-weight: 600;
-
-    text-decoration: none;
-
-    transition: all 0.2s ease;
-}
-
-.server-actions .secondary-btn:hover {
-    background: #e5e7eb;
-    border-color: #cbd5e1;
-    transform: translateY(-1px);
-}
-
-.server-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.server-actions form {
-    margin: 0;
-}
-
-.server-actions .danger-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    min-width: 64px;
-    height: 34px;
-
-    padding: 0 12px;
-
-    border-radius: 8px;
-
-    background: #fef2f2;
-    color: #dc2626;
-
-    border: 1px solid #fecaca;
-
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition: all 0.2s ease;
-}
-
-.server-actions .danger-btn:hover {
-    background: #fee2e2;
-    border-color: #fca5a5;
-    transform: translateY(-1px);
+    .server-card-header {
+        padding: 20px;
+    }
 }

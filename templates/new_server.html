@@ -77,6 +77,29 @@ Add Server
 
         </div>
 
+
+        <div class="form-group">
+
+            <label for="project_id">Project</label>
+
+            <select id="project_id" name="project_id" required>
+
+                <option value="">Select Project</option>
+
+                {% for project in projects %}
+
+                <option value="{{ project.id }}">
+                    {{ project.name }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+
         <button type="submit" class="primary-btn">
             Add Server
         </button>
