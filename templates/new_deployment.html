@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}
+NovaOps | New Deployment
+{% endblock %}
+
+{% block page_title %}
+New Deployment
+{% endblock %}
+
+{% block content %}
+
+<div class="welcome">
+
+    <div>
+        <h1>New Deployment</h1>
+        <p>Register a new application deployment.</p>
+    </div>
+
+</div>
+
+
+<div class="form-card">
+
+    <form method="POST">
+
+        <!-- Project -->
+
+        <div class="form-group">
+
+            <label for="project_id">
+                Project
+            </label>
+
+            <select id="project_id" name="project_id" required>
+
+                <option value="">
+                    Select Project
+                </option>
+
+                {% for project in projects %}
+
+                <option value="{{ project.id }}">
+                    {{ project.name }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <!-- Server -->
+
+        <div class="form-group">
+
+            <label for="server_id">
+                Server
+            </label>
+
+            <select id="server_id" name="server_id" required>
+
+                <option value="">
+                    Select Server
+                </option>
+
+                {% for server in servers %}
+
+                <option value="{{ server.id }}">
+                    {{ server.name }}
+                </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <!-- Environment -->
+
+        <div class="form-group">
+
+            <label for="environment">
+                Environment
+            </label>
+
+            <select id="environment" name="environment" required>
+
+                <option value="">
+                    Select Environment
+                </option>
+
+                <option value="Development">
+                    Development
+                </option>
+
+                <option value="Staging">
+                    Staging
+                </option>
+
+                <option value="Production">
+                    Production
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- Version -->
+
+        <div class="form-group">
+
+            <label for="version">
+                Version
+            </label>
+
+            <input type="text" id="version" name="version" placeholder="e.g. v1.0.0" required>
+
+        </div>
+
+
+        <!-- Status -->
+
+        <div class="form-group">
+
+            <label for="status">
+                Status
+            </label>
+
+            <select id="status" name="status" required>
+
+                <option value="Successful">
+                    Successful
+                </option>
+
+                <option value="In Progress">
+                    In Progress
+                </option>
+
+                <option value="Failed">
+                    Failed
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- Actions -->
+
+        <div class="form-actions">
+
+            <button type="submit" class="primary-btn">
+                Create Deployment
+            </button>
+
+            <a href="{{ url_for('deployments') }}" class="secondary-btn">
+                Cancel
+            </a>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

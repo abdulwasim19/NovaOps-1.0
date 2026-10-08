@@ -1,9 +1,17 @@
-# Imports
+
+# =========================================
+# IMPORTS
+# =========================================
+
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 
-# App configuration
+# =========================================
+# APP CONFIGURATION
+# =========================================
+
 app = Flask(__name__)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///novaops.db"
@@ -12,13 +20,15 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
-# =========================
+# =========================================
 # MODELS
-# =========================
-
+# =========================================
 
 class Project(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
     name = db.Column(
         db.String(100),
@@ -43,7 +53,10 @@ class Project(db.Model):
 
 
 class Server(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
     name = db.Column(
         db.String(100),
@@ -77,15 +90,67 @@ class Server(db.Model):
     )
 
 
-# =========================
+class Deployment(db.Model):
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    project_id = db.Column(
+        db.Integer,
+        db.ForeignKey("project.id"),
+        nullable=False
+    )
+
+    server_id = db.Column(
+        db.Integer,
+        db.ForeignKey("server.id"),
+        nullable=False
+    )
+
+    environment = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    version = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    status = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
+    deployed_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    project = db.relationship(
+        "Project",
+        backref="deployments"
+    )
+
+    server = db.relationship(
+        "Server",
+        backref="deployments"
+    )
+
+
+# =========================================
 # DASHBOARD
-# =========================
+# =========================================
 
 @app.route("/")
 def dashboard():
 
     project_count = Project.query.count()
+
     server_count = Server.query.count()
+
+    deployment_count = Deployment.query.count()
 
     recent_projects = Project.query.order_by(
         Project.id.desc()
@@ -94,7 +159,7 @@ def dashboard():
     stats = {
         "projects": project_count,
         "servers": server_count,
-        "deployments": 24,
+        "deployments": deployment_count,
         "health": 98
     }
 
@@ -105,12 +170,13 @@ def dashboard():
     )
 
 
-# =========================
+# =========================================
 # PROJECT ROUTES
-# =========================
+# =========================================
 
 @app.route("/projects")
 def projects():
+
     projects = Project.query.all()
 
     return render_template(
@@ -139,7 +205,9 @@ def new_project():
 
         return redirect(url_for("projects"))
 
-    return render_template("new_project.html")
+    return render_template(
+        "new_project.html"
+    )
 
 
 @app.route("/projects/edit/<int:project_id>", methods=["GET", "POST"])
@@ -174,9 +242,9 @@ def delete_project(project_id):
     return redirect(url_for("projects"))
 
 
-# =========================
+# =========================================
 # SERVER ROUTES
-# =========================
+# =========================================
 
 @app.route("/servers")
 def servers():
@@ -192,7 +260,9 @@ def servers():
 @app.route("/servers/new", methods=["GET", "POST"])
 def new_server():
 
-    projects = Project.query.all()
+    projects = Project.query.order_by(
+        Project.name.asc()
+    ).all()
 
     if request.method == "POST":
 
@@ -209,7 +279,7 @@ def new_server():
             provider=provider,
             region=region,
             status=status,
-            project_id=project_id
+            project_id=int(project_id)
         )
 
         db.session.add(server)
@@ -269,16 +339,124 @@ def delete_server(server_id):
     return redirect(url_for("servers"))
 
 
-# =========================
+# =========================================
+# DEPLOYMENT ROUTES
+# =========================================
+
+@app.route("/deployments")
+def deployments():
+
+    deployments = Deployment.query.order_by(
+        Deployment.id.desc()
+    ).all()
+
+    return render_template(
+        "deployments.html",
+        deployments=deployments
+    )
+
+
+@app.route("/deployments/new", methods=["GET", "POST"])
+def new_deployment():
+
+    projects = Project.query.order_by(
+        Project.name.asc()
+    ).all()
+
+    servers = Server.query.order_by(
+        Server.name.asc()
+    ).all()
+
+    if request.method == "POST":
+
+        project_id = request.form["project_id"]
+        server_id = request.form["server_id"]
+        environment = request.form["environment"]
+        version = request.form["version"]
+        status = request.form["status"]
+
+        deployment = Deployment(
+            project_id=int(project_id),
+            server_id=int(server_id),
+            environment=environment,
+            version=version,
+            status=status
+        )
+
+        db.session.add(deployment)
+        db.session.commit()
+
+        return redirect(url_for("deployments"))
+
+    return render_template(
+        "new_deployment.html",
+        projects=projects,
+        servers=servers
+    )
+
+
+@app.route("/deployments/edit/<int:deployment_id>", methods=["GET", "POST"])
+def edit_deployment(deployment_id):
+
+    deployment = Deployment.query.get_or_404(deployment_id)
+
+    projects = Project.query.order_by(
+        Project.name.asc()
+    ).all()
+
+    servers = Server.query.order_by(
+        Server.name.asc()
+    ).all()
+
+    if request.method == "POST":
+
+        deployment.project_id = int(
+            request.form["project_id"]
+        )
+
+        deployment.server_id = int(
+            request.form["server_id"]
+        )
+
+        deployment.environment = request.form["environment"]
+        deployment.version = request.form["version"]
+        deployment.status = request.form["status"]
+
+        db.session.commit()
+
+        return redirect(url_for("deployments"))
+
+    return render_template(
+        "edit_deployment.html",
+        deployment=deployment,
+        projects=projects,
+        servers=servers
+    )
+
+
+@app.route("/deployments/delete/<int:deployment_id>", methods=["POST"])
+def delete_deployment(deployment_id):
+
+    deployment = Deployment.query.get_or_404(deployment_id)
+
+    db.session.delete(deployment)
+    db.session.commit()
+
+    return redirect(url_for("deployments"))
+
+
+# =========================================
 # DATABASE
-# =========================
+# =========================================
+
+
 with app.app_context():
     db.create_all()
 
 
-# =========================
-# RUN
-# =========================
+# =========================================
+# RUN APPLICATION
+# =========================================
 
 if __name__ == "__main__":
     app.run(debug=True)
