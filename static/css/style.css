@@ -804,25 +804,65 @@ body {
     text-overflow: ellipsis;
 }
 
-
 /* =========================================
    SERVER STATUS
 ========================================= */
 
 .server-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
     justify-self: start;
 
     padding: 6px 10px;
 
     border-radius: 20px;
 
-    background: #ecfdf5;
-
-    color: #16a34a;
-
     font-size: 12px;
 
     font-weight: 600;
+}
+
+
+/* Running */
+
+.status-running {
+    background: #ecfdf5;
+
+    color: #16a34a;
+}
+
+
+/* Stopped */
+
+.status-stopped {
+    background: #fffbeb;
+
+    color: #d97706;
+}
+
+
+/* Failed */
+
+.status-failed {
+    background: #fef2f2;
+
+    color: #dc2626;
+}
+
+
+/* Status Indicator */
+
+.status-indicator {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: currentColor;
 }
 
 
@@ -1031,4 +1071,368 @@ body {
     font-weight: 600;
 
     line-height: 1.5;
+}
+
+
+/* =========================================
+   DEPLOYMENT OVERVIEW
+========================================= */
+
+.deployment-overview {
+    margin-top: 30px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    padding: 26px 28px;
+}
+
+.deployment-overview-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+.deployment-overview-header h2 {
+    font-size: 19px;
+
+    color: #111827;
+}
+
+.deployment-overview-header p {
+    margin-top: 5px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+.deployment-summary-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+.deployment-summary-card {
+    padding: 20px;
+
+    background: #f9fafb;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+}
+
+.deployment-summary-label {
+    color: #6b7280;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+}
+
+.deployment-summary-card h3 {
+    margin-top: 12px;
+
+    font-size: 28px;
+
+    color: #111827;
+}
+
+.deployment-summary-card p {
+    margin-top: 8px;
+
+    color: #9ca3af;
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   RECENT DEPLOYMENTS
+========================================= */
+
+.recent-deployments {
+    margin-top: 30px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    padding: 26px 28px;
+}
+
+.recent-deployments-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 10px;
+}
+
+.recent-deployments-header h2 {
+    font-size: 19px;
+
+    color: #111827;
+}
+
+.recent-deployments-header p {
+    margin-top: 5px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+.recent-deployment-list {
+    width: 100%;
+}
+
+.recent-deployment-item {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr) 120px 140px;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 18px 0;
+
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.recent-deployment-item:last-child {
+    border-bottom: none;
+}
+
+.recent-deployment-info {
+    min-width: 0;
+}
+
+.recent-deployment-info h3 {
+    margin-bottom: 6px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    color: #111827;
+}
+
+.recent-deployment-info p {
+    color: #6b7280;
+
+    font-size: 13px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.deployment-status {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 95px;
+
+    padding: 7px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.deployment-success {
+    background: #ecfdf5;
+
+    color: #16a34a;
+}
+
+.deployment-failed {
+    background: #fef2f2;
+
+    color: #dc2626;
+}
+
+.deployment-progress {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+.deployment-time {
+    color: #6b7280;
+
+    font-size: 12px;
+
+    text-align: right;
+}
+
+
+/* =========================================
+   DEPLOYMENT RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+    .deployment-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .recent-deployment-item {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+    .deployment-time {
+        text-align: left;
+    }
+
+    .deployment-status {
+        justify-self: start;
+    }
+}
+
+
+/* =========================================
+   SERVER HEALTH OVERVIEW
+========================================= */
+
+.server-health-overview {
+    margin-top: 30px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 14px;
+
+    padding: 26px 28px;
+}
+
+.server-health-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+.server-health-header h2 {
+    font-size: 19px;
+
+    color: #111827;
+}
+
+.server-health-header p {
+    margin-top: 5px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+}
+
+.health-score {
+    font-size: 28px;
+
+    font-weight: 700;
+
+    color: #16a34a;
+}
+
+.server-health-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3,
+            minmax(0, 1fr));
+
+    gap: 16px;
+}
+
+.health-card {
+    padding: 20px;
+
+    background: #f9fafb;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+}
+
+.health-label {
+    color: #6b7280;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+}
+
+.health-card h3 {
+    margin-top: 12px;
+
+    font-size: 28px;
+
+    color: #111827;
+}
+
+.health-card p {
+    margin-top: 8px;
+
+    color: #9ca3af;
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   HEALTH RESPONSIVE
+========================================= */
+
+@media (max-width: 900px) {
+
+    .server-health-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .server-health-header {
+        align-items: flex-start;
+
+        gap: 15px;
+
+        flex-direction: column;
+    }
+}
+
+
+/* Deployment In Progress */
+
+.status-progress {
+    background: #eff6ff;
+
+    color: #2563eb;
 }

@@ -94,6 +94,173 @@ Dashboard
 </div>
 
 
+<!-- =========================================
+     DEPLOYMENT OVERVIEW
+========================================= -->
+
+<div class="deployment-overview">
+
+    <div class="deployment-overview-header">
+
+        <div>
+            <h2>Deployment Overview</h2>
+            <p>Current deployment activity across NovaOps.</p>
+        </div>
+
+        <a href="{{ url_for('deployments') }}" class="secondary-btn">
+            View All
+        </a>
+
+    </div>
+
+
+    <div class="deployment-summary-grid">
+
+        <!-- Successful -->
+
+        <div class="deployment-summary-card">
+
+            <span class="deployment-summary-label">
+                Successful
+            </span>
+
+            <h3>
+                {{ deployment_stats.successful }}
+            </h3>
+
+            <p>
+                Successful deployments
+            </p>
+
+        </div>
+
+
+        <!-- In Progress -->
+
+        <div class="deployment-summary-card">
+
+            <span class="deployment-summary-label">
+                In Progress
+            </span>
+
+            <h3>
+                {{ deployment_stats.in_progress }}
+            </h3>
+
+            <p>
+                Deployments currently active
+            </p>
+
+        </div>
+
+
+        <!-- Failed -->
+
+        <div class="deployment-summary-card">
+
+            <span class="deployment-summary-label">
+                Failed
+            </span>
+
+            <h3>
+                {{ deployment_stats.failed }}
+            </h3>
+
+            <p>
+                Deployments requiring attention
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================
+     SERVER HEALTH OVERVIEW
+========================================= -->
+
+<div class="server-health-overview">
+
+    <div class="server-health-header">
+
+        <div>
+            <h2>Infrastructure Health</h2>
+            <p>Current status of registered servers.</p>
+        </div>
+
+        <div class="health-score">
+            {{ stats.health }}%
+        </div>
+
+    </div>
+
+
+    <div class="server-health-grid">
+
+        <!-- Running -->
+
+        <div class="health-card">
+
+            <span class="health-label">
+                Running
+            </span>
+
+            <h3>
+                {{ server_stats.running }}
+            </h3>
+
+            <p>
+                Healthy servers
+            </p>
+
+        </div>
+
+
+        <!-- Stopped -->
+
+        <div class="health-card">
+
+            <span class="health-label">
+                Stopped
+            </span>
+
+            <h3>
+                {{ server_stats.stopped }}
+            </h3>
+
+            <p>
+                Currently stopped
+            </p>
+
+        </div>
+
+
+        <!-- Failed -->
+
+        <div class="health-card">
+
+            <span class="health-label">
+                Failed
+            </span>
+
+            <h3>
+                {{ server_stats.failed }}
+            </h3>
+
+            <p>
+                Require attention
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 <!-- Recent Projects -->
 
 <div class="recent-projects">
@@ -145,6 +312,91 @@ Dashboard
             <a href="{{ url_for('new_project') }}" class="primary-btn">
                 + Create Project
             </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     RECENT DEPLOYMENTS
+========================================= -->
+
+<div class="recent-deployments">
+
+    <div class="recent-deployments-header">
+
+        <div>
+            <h2>Recent Deployments</h2>
+            <p>Latest deployment activity.</p>
+        </div>
+
+        <a href="{{ url_for('deployments') }}" class="secondary-btn">
+            View All
+        </a>
+
+    </div>
+
+
+    <div class="recent-deployment-list">
+
+        {% for deployment in recent_deployments %}
+
+        <div class="recent-deployment-item">
+
+            <div class="recent-deployment-info">
+
+                <h3>
+                    {{ deployment.project.name }}
+                </h3>
+
+                <p>
+                    {{ deployment.server.name }}
+                    •
+                    {{ deployment.environment }}
+                    •
+                    {{ deployment.version }}
+                </p>
+
+            </div>
+
+
+            <span class="deployment-status
+                {% if deployment.status == 'Successful' %}
+                    deployment-success
+                {% elif deployment.status == 'Failed' %}
+                    deployment-failed
+                {% else %}
+                    deployment-progress
+                {% endif %}">
+                {{ deployment.status }}
+            </span>
+
+
+            <span class="deployment-time">
+
+                {{ deployment.deployed_at.strftime(
+                "%Y-%m-%d %H:%M"
+                ) }}
+
+            </span>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <h3>No Deployments Yet</h3>
+
+            <p>
+                Your recent deployment activity will appear here.
+            </p>
 
         </div>
 

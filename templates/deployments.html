@@ -75,9 +75,20 @@ Deployments
                 {{ deployment.version }}
             </span>
 
-            <span class="server-status">
+
+            <span class="server-status
+    {% if deployment.status == 'Successful' %}
+        status-running
+    {% elif deployment.status == 'In Progress' %}
+        status-progress
+    {% elif deployment.status == 'Failed' %}
+        status-failed
+    {% endif %}">
+                <span class="status-indicator"></span>
+
                 {{ deployment.status }}
             </span>
+
 
             <span>
                 {{ deployment.deployed_at.strftime("%Y-%m-%d %H:%M") }}

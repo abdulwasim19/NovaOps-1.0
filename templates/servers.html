@@ -93,9 +93,20 @@ Servers
 
             </span>
 
-            <span class="server-status">
+
+            <span class="server-status
+    {% if server.status == 'Running' %}
+        status-running
+    {% elif server.status == 'Stopped' %}
+        status-stopped
+    {% elif server.status == 'Failed' %}
+        status-failed
+    {% endif %}">
+                <span class="status-indicator"></span>
+
                 {{ server.status }}
             </span>
+
 
 
             <!-- Actions -->

@@ -152,22 +152,100 @@ def dashboard():
 
     deployment_count = Deployment.query.count()
 
+
+    # =========================================
+    # DEPLOYMENT STATISTICS
+    # =========================================
+
+    successful_deployments = Deployment.query.filter_by(
+        status="Successful"
+    ).count()
+
+    in_progress_deployments = Deployment.query.filter_by(
+        status="In Progress"
+    ).count()
+
+    failed_deployments = Deployment.query.filter_by(
+        status="Failed"
+    ).count()
+
+
+    # =========================================
+    # SERVER HEALTH
+    # =========================================
+
+    running_servers = Server.query.filter_by(
+        status="Running"
+    ).count()
+
+    stopped_servers = Server.query.filter_by(
+        status="Stopped"
+    ).count()
+
+    failed_servers = Server.query.filter_by(
+        status="Failed"
+    ).count()
+
+
+    if server_count > 0:
+
+        health = round(
+            (running_servers / server_count) * 100
+        )
+
+    else:
+
+        health = 0
+
+
+    # =========================================
+    # RECENT DATA
+    # =========================================
+
     recent_projects = Project.query.order_by(
         Project.id.desc()
     ).limit(5).all()
+
+    recent_deployments = Deployment.query.order_by(
+        Deployment.deployed_at.desc()
+    ).limit(5).all()
+
+
+    # =========================================
+    # DASHBOARD DATA
+    # =========================================
 
     stats = {
         "projects": project_count,
         "servers": server_count,
         "deployments": deployment_count,
-        "health": 98
+        "health": health
     }
+
+
+    deployment_stats = {
+        "successful": successful_deployments,
+        "in_progress": in_progress_deployments,
+        "failed": failed_deployments
+    }
+
+
+    server_stats = {
+        "running": running_servers,
+        "stopped": stopped_servers,
+        "failed": failed_servers
+    }
+
 
     return render_template(
         "dashboard.html",
         stats=stats,
-        recent_projects=recent_projects
+        deployment_stats=deployment_stats,
+        server_stats=server_stats,
+        recent_projects=recent_projects,
+        recent_deployments=recent_deployments
     )
+
 
 
 # =========================================
