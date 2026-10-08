@@ -42,6 +42,100 @@ Servers
     </div>
 
 
+    <!-- =========================================
+     SERVER FILTERS
+========================================= -->
+
+    <div class="server-filters">
+
+        <form method="GET" action="{{ url_for('servers') }}">
+
+            <!-- Search -->
+
+            <div class="filter-search">
+
+                <input type="text" name="search" value="{{ search }}" placeholder="Search server name or IP...">
+
+            </div>
+
+
+            <!-- Provider -->
+
+            <div class="filter-select">
+
+                <select name="provider">
+
+                    <option value="">
+                        All Providers
+                    </option>
+
+                    <option value="AWS" {% if provider=="AWS" %}selected{% endif %}>
+                        AWS
+                    </option>
+
+                    <option value="Azure" {% if provider=="Azure" %}selected{% endif %}>
+                        Azure
+                    </option>
+
+                    <option value="GCP" {% if provider=="GCP" %}selected{% endif %}>
+                        GCP
+                    </option>
+
+                    <option value="On-Premise" {% if provider=="On-Premise" %}selected{% endif %}>
+                        On-Premise
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Status -->
+
+            <div class="filter-select">
+
+                <select name="status">
+
+                    <option value="">
+                        All Statuses
+                    </option>
+
+                    <option value="Running" {% if status=="Running" %}selected{% endif %}>
+                        Running
+                    </option>
+
+                    <option value="Stopped" {% if status=="Stopped" %}selected{% endif %}>
+                        Stopped
+                    </option>
+
+                    <option value="Failed" {% if status=="Failed" %}selected{% endif %}>
+                        Failed
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Apply -->
+
+            <button type="submit" class="filter-btn">
+                Apply
+            </button>
+
+
+            <!-- Clear -->
+
+            <a href="{{ url_for('servers') }}" class="clear-filter-btn">
+                Clear
+            </a>
+
+        </form>
+
+    </div>
+
+
+
     <!-- Server Table -->
 
     <div class="server-table">

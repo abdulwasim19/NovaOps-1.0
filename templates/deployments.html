@@ -40,6 +40,120 @@ Deployments
     </div>
 
 
+    <!-- =========================================
+    DEPLOYMENT FILTERS
+========================================= -->
+
+    <div class="deployment-filters">
+
+        <form method="GET" action="{{ url_for('deployments') }}">
+
+            <!-- Search -->
+
+            <div class="deployment-filter-search">
+
+                <input type="text" name="search" value="{{ search }}"
+                    placeholder="Search project, server, or version...">
+
+            </div>
+
+
+            <!-- Project -->
+
+            <div class="deployment-filter-select">
+
+                <select name="project_id">
+
+                    <option value="">
+                        All Projects
+                    </option>
+
+                    {% for project in projects %}
+
+                    <option value="{{ project.id }}" {% if project_id|string==project.id|string %} selected {% endif %}>
+                        {{ project.name }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- Environment -->
+
+            <div class="deployment-filter-select">
+
+                <select name="environment">
+
+                    <option value="">
+                        All Environments
+                    </option>
+
+                    <option value="Development" {% if environment=="Development" %} selected {% endif %}>
+                        Development
+                    </option>
+
+                    <option value="Staging" {% if environment=="Staging" %} selected {% endif %}>
+                        Staging
+                    </option>
+
+                    <option value="Production" {% if environment=="Production" %} selected {% endif %}>
+                        Production
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Status -->
+
+            <div class="deployment-filter-select">
+
+                <select name="status">
+
+                    <option value="">
+                        All Statuses
+                    </option>
+
+                    <option value="Successful" {% if status=="Successful" %} selected {% endif %}>
+                        Successful
+                    </option>
+
+                    <option value="In Progress" {% if status=="In Progress" %} selected {% endif %}>
+                        In Progress
+                    </option>
+
+                    <option value="Failed" {% if status=="Failed" %} selected {% endif %}>
+                        Failed
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Apply -->
+
+            <button type="submit" class="filter-btn">
+                Apply
+            </button>
+
+
+            <!-- Clear -->
+
+            <a href="{{ url_for('deployments') }}" class="clear-filter-btn">
+                Clear
+            </a>
+
+        </form>
+
+    </div>
+
+
+
     <div class="server-table">
 
         <div class="server-table-header">

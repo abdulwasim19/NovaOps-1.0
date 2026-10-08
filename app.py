@@ -152,7 +152,6 @@ def dashboard():
 
     deployment_count = Deployment.query.count()
 
-
     # =========================================
     # DEPLOYMENT STATISTICS
     # =========================================
@@ -168,7 +167,6 @@ def dashboard():
     failed_deployments = Deployment.query.filter_by(
         status="Failed"
     ).count()
-
 
     # =========================================
     # SERVER HEALTH
@@ -186,7 +184,6 @@ def dashboard():
         status="Failed"
     ).count()
 
-
     if server_count > 0:
 
         health = round(
@@ -196,7 +193,6 @@ def dashboard():
     else:
 
         health = 0
-
 
     # =========================================
     # RECENT DATA
@@ -210,7 +206,6 @@ def dashboard():
         Deployment.deployed_at.desc()
     ).limit(5).all()
 
-
     # =========================================
     # DASHBOARD DATA
     # =========================================
@@ -222,20 +217,17 @@ def dashboard():
         "health": health
     }
 
-
     deployment_stats = {
         "successful": successful_deployments,
         "in_progress": in_progress_deployments,
         "failed": failed_deployments
     }
 
-
     server_stats = {
         "running": running_servers,
         "stopped": stopped_servers,
         "failed": failed_servers
     }
-
 
     return render_template(
         "dashboard.html",
@@ -245,7 +237,6 @@ def dashboard():
         recent_projects=recent_projects,
         recent_deployments=recent_deployments
     )
-
 
 
 # =========================================
@@ -327,11 +318,51 @@ def delete_project(project_id):
 @app.route("/servers")
 def servers():
 
-    servers = Server.query.all()
+    search = request.args.get("search", "").strip()
+
+    provider = request.args.get("provider", "").strip()
+
+    status = request.args.get("status", "").strip()
+
+    query = Server.query
+
+    # Search by server name or IP address
+
+    if search:
+
+        query = query.filter(
+            db.or_(
+                Server.name.ilike(f"%{search}%"),
+                Server.ip_address.ilike(f"%{search}%")
+            )
+        )
+
+    # Filter by provider
+
+    if provider:
+
+        query = query.filter(
+            Server.provider == provider
+        )
+
+    # Filter by status
+
+    if status:
+
+        query = query.filter(
+            Server.status == status
+        )
+
+    servers = query.order_by(
+        Server.id.desc()
+    ).all()
 
     return render_template(
         "servers.html",
-        servers=servers
+        servers=servers,
+        search=search,
+        provider=provider,
+        status=status
     )
 
 
@@ -439,16 +470,102 @@ def project_servers(project_id):
 # DEPLOYMENT ROUTES
 # =========================================
 
+
 @app.route("/deployments")
 def deployments():
 
-    deployments = Deployment.query.order_by(
-        Deployment.id.desc()
+    search = request.args.get(
+        "search",
+        ""
+    ).strip()
+
+    project_id = request.args.get(
+        "project_id",
+        ""
+    ).strip()
+
+    environment = request.args.get(
+        "environment",
+        ""
+    ).strip()
+
+    status = request.args.get(
+        "status",
+        ""
+    ).strip()
+
+    query = Deployment.query
+
+    # =========================================
+    # SEARCH
+    # =========================================
+
+    if search:
+
+        query = query.join(
+            Deployment.project
+        ).join(
+            Deployment.server
+        ).filter(
+            db.or_(
+                Project.name.ilike(
+                    f"%{search}%"
+                ),
+                Server.name.ilike(
+                    f"%{search}%"
+                ),
+                Deployment.version.ilike(
+                    f"%{search}%"
+                )
+            )
+        )
+
+    # =========================================
+    # PROJECT FILTER
+    # =========================================
+
+    if project_id:
+
+        query = query.filter(
+            Deployment.project_id == int(project_id)
+        )
+
+    # =========================================
+    # ENVIRONMENT FILTER
+    # =========================================
+
+    if environment:
+
+        query = query.filter(
+            Deployment.environment == environment
+        )
+
+    # =========================================
+    # STATUS FILTER
+    # =========================================
+
+    if status:
+
+        query = query.filter(
+            Deployment.status == status
+        )
+
+    deployments = query.order_by(
+        Deployment.deployed_at.desc()
+    ).all()
+
+    projects = Project.query.order_by(
+        Project.name.asc()
     ).all()
 
     return render_template(
         "deployments.html",
-        deployments=deployments
+        deployments=deployments,
+        projects=projects,
+        search=search,
+        project_id=project_id,
+        environment=environment,
+        status=status
     )
 
 
