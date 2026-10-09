@@ -645,19 +645,19 @@ Although the current version does not yet provide direct AWS resource management
 ## 📸 Screenshots
 
 ### 1. Dashboard
-![NovaOps Dashboard](/home/abdul-wasim/Pictures/Screenshots/)
+![NovaOps Dashboard](/home/abdul-wasim/Pictures/Screenshots/dashboard.png)
 
 ### 2. Project Management
-![NovaOps Projects](screenshots/projects.png)
+![NovaOps Projects](/home/abdul-wasim/Pictures/Screenshots/Project.png)
 
 ### 3. Server Management
-![NovaOps Servers](screenshots/servers.png)
+![NovaOps Servers](/home/abdul-wasim/Pictures/Screenshots/server.png)
 
 ### 4. Deployment Management
-![NovaOps Deployments](screenshots/deployments.png)
+![NovaOps Deployments](/home/abdul-wasim/Pictures/Screenshots/deployment.png)
 
 ### 5. System Monitoring
-![NovaOps Monitoring](screenshots/monitoring.png)
+![NovaOps Monitoring] (/home/abdul-wasim/Pictures/Screenshots/monitoring.png)
 ---
 
 ## 👨‍💻 Author
