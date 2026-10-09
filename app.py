@@ -743,34 +743,41 @@ def edit_project(project_id):
     )
 
 
-@app.route(
-    "/projects/delete/<int:project_id>",
-    methods=["POST"]
-)
+@app.route("/projects/delete/<int:project_id>", methods=["POST"])
 def delete_project(project_id):
+    project = Project.query.get_or_404(project_id)
 
-    project = Project.query.get_or_404(
-        project_id
-    )
+    # Check whether this project has associated deployments
+    deployments = Deployment.query.filter_by(
+        project_id=project.id
+    ).count()
 
-    project_name = project.name
+    if deployments > 0:
+        flash(
+            f"Cannot delete '{project.name}' because it has "
+            f"{deployments} associated deployment(s). "
+            "Remove or reassign those deployments first.",
+            "error"
+        )
+        return redirect(url_for("projects"))
 
-    project_id_value = project.id
+    try:
+        db.session.delete(project)
+        db.session.commit()
 
-    db.session.delete(project)
+        flash(
+            f"Project '{project.name}' deleted successfully.",
+            "success"
+        )
 
-    create_audit_log(
-        "DELETE",
-        "Project",
-        project_id_value,
-        f"Project '{project_name}' was deleted."
-    )
+    except Exception:
+        db.session.rollback()
+        flash(
+            "Unable to delete this project. Please try again.",
+            "error"
+        )
 
-    db.session.commit()
-
-    return redirect(
-        url_for("projects")
-    )
+    return redirect(url_for("projects"))
 
 
 # =========================================
