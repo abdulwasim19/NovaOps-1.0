@@ -639,6 +639,25 @@ Although the current version does not yet provide direct AWS resource management
 
 **NovaOps 1.0 represents an important step in my journey toward becoming a Cloud and DevOps Engineer.** My next goal is to build on this foundation by learning and implementing AWS integration, containerization, CI/CD, infrastructure as code, and advanced monitoring.
 
+
+---
+
+## 📸 Screenshots
+
+### 1. Dashboard
+![NovaOps Dashboard](screenshots/dashboard.png)
+
+### 2. Project Management
+![NovaOps Projects](screenshots/projects.png)
+
+### 3. Server Management
+![NovaOps Servers](screenshots/servers.png)
+
+### 4. Deployment Management
+![NovaOps Deployments](screenshots/deployments.png)
+
+### 5. System Monitoring
+![NovaOps Monitoring](screenshots/monitoring.png)
 ---
 
 ## 👨‍💻 Author
