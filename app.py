@@ -2,18 +2,11 @@
 # =========================================
 # IMPORTS
 # =========================================
-
+import psutil
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from flask import (
-    Flask,
-    render_template,
-    request,
-    redirect,
-    url_for,
-    jsonify
-)
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
@@ -42,6 +35,7 @@ def india_now():
 
 app = Flask(__name__)
 
+app.config["SECRET_KEY"] = "novaops-dev-secret-key-change-this"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///novaops.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -1091,34 +1085,47 @@ def edit_server(server_id):
     )
 
 
-@app.route(
-    "/servers/delete/<int:server_id>",
-    methods=["POST"]
-)
+@app.route("/servers/delete/<int:server_id>", methods=["POST"])
 def delete_server(server_id):
+    server = db.session.get(Server, server_id)
 
-    server = Server.query.get_or_404(
-        server_id
-    )
+    if server is None:
+        flash("Server not found.", "error")
+        return redirect(url_for("servers"))
 
-    server_name = server.name
+    # Find deployments associated with this server.
+    related_deployments = Deployment.query.filter_by(
+        server_id=server.id
+    ).count()
 
-    server_id_value = server.id
+    # Protect deployments from accidental relationship changes.
+    if related_deployments > 0:
+        flash(
+            f"Cannot delete '{server.name}' because it is "
+            f"associated with {related_deployments} deployment(s). "
+            "Reassign or remove those deployments first.",
+            "error"
+        )
+        return redirect(url_for("servers"))
 
-    db.session.delete(server)
+    try:
+        db.session.delete(server)
+        db.session.commit()
 
-    create_audit_log(
-        "DELETE",
-        "Server",
-        server_id_value,
-        f"Server '{server_name}' was deleted."
-    )
+        flash(
+            f"Server '{server.name}' deleted successfully.",
+            "success"
+        )
 
-    db.session.commit()
+    except Exception:
+        db.session.rollback()
 
-    return redirect(
-        url_for("servers")
-    )
+        flash(
+            "Unable to delete the server. Please try again.",
+            "error"
+        )
+
+    return redirect(url_for("servers"))
 
 
 # =========================================
@@ -1621,6 +1628,23 @@ def settings():
         refresh_options=refresh_options,
         error=error
     )
+
+
+@app.route("/api/system-metrics")
+def system_metrics():
+    memory = psutil.virtual_memory()
+    disk = psutil.disk_usage("/")
+
+    return jsonify({
+        "cpu_percent": psutil.cpu_percent(interval=0.1),
+        "memory_percent": memory.percent,
+        "memory_used_gb": round(memory.used / (1024 ** 3), 2),
+        "memory_total_gb": round(memory.total / (1024 ** 3), 2),
+        "disk_percent": disk.percent,
+        "disk_used_gb": round(disk.used / (1024 ** 3), 2),
+        "disk_total_gb": round(disk.total / (1024 ** 3), 2),
+    })
+
 
 # =========================================
 # DATABASE

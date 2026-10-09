@@ -157,6 +157,88 @@
     {% endfor %}
 </section>
 
+
+<section class="system-metrics">
+    <h2>Live System Metrics</h2>
+
+    <div class="metrics-grid">
+
+        <div class="metric-card">
+            <h3>CPU Usage</h3>
+            <p id="cpu-value">Loading...</p>
+            <div class="progress-track">
+                <div id="cpu-bar" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <h3>Memory Usage</h3>
+            <p id="memory-value">Loading...</p>
+            <div class="progress-track">
+                <div id="memory-bar" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <h3>Disk Usage</h3>
+            <p id="disk-value">Loading...</p>
+            <div class="progress-track">
+                <div id="disk-bar" class="progress-fill"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <p id="metrics-updated">Waiting for metrics...</p>
+</section>
+
+<script>
+    async function updateSystemMetrics() {
+        const updatedElement = document.getElementById("metrics-updated");
+
+        try {
+            const response = await fetch("/api/system-metrics");
+
+            if (!response.ok) {
+                throw new Error("Unable to fetch system metrics");
+            }
+
+            const data = await response.json();
+
+            document.getElementById("cpu-value").textContent =
+                `${data.cpu_percent}%`;
+
+            document.getElementById("memory-value").textContent =
+                `${data.memory_used_gb} GB / ${data.memory_total_gb} GB (${data.memory_percent}%)`;
+
+            document.getElementById("disk-value").textContent =
+                `${data.disk_used_gb} GB / ${data.disk_total_gb} GB (${data.disk_percent}%)`;
+
+            updateProgressBar("cpu-bar", data.cpu_percent);
+            updateProgressBar("memory-bar", data.memory_percent);
+            updateProgressBar("disk-bar", data.disk_percent);
+
+            updatedElement.textContent =
+                `Last updated: ${new Date().toLocaleTimeString()}`;
+
+        } catch (error) {
+            console.error("Metrics error:", error);
+            updatedElement.textContent = "Unable to load system metrics.";
+        }
+    }
+
+    function updateProgressBar(id, percentage) {
+        const bar = document.getElementById(id);
+        const value = Math.max(0, Math.min(100, Number(percentage) || 0));
+
+        bar.style.width = `${value}%`;
+    }
+
+    updateSystemMetrics();
+    setInterval(updateSystemMetrics, 5000);
+</script>
+
+
 <!-- Recent Deployments -->
 <section class="monitoring-section">
     <div class="section-heading">
