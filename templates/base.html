@@ -1,235 +1,137 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>
-        {% block title %}
-        NovaOps
-        {% endblock %}
-    </title>
+    <title>{% block title %}{{ app_name }}{% endblock %}</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
 </head>
-
 
 <body>
 
     <div class="app">
 
-
         <!-- =========================================
-         SIDEBAR
-    ========================================= -->
+             SIDEBAR
+        ========================================== -->
 
         <aside class="sidebar">
 
-
             <!-- Logo -->
-
             <div class="logo">
-
                 <span>⚡</span>
-
-                NovaOps
-
+                {{ app_name }}
             </div>
 
-
-            <!-- Navigation -->
-
+            <!-- Main Navigation -->
             <nav class="navigation">
 
-
                 <!-- Dashboard -->
-
                 <a href="{{ url_for('dashboard') }}"
                     class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
-
-                    <span class="nav-icon">
-                        ▦
-                    </span>
-
-                    <span>
-                        Dashboard
-                    </span>
-
+                    <span class="nav-icon">▦</span>
+                    <span>Dashboard</span>
                 </a>
-
 
                 <!-- Projects -->
-
                 <a href="{{ url_for('projects') }}"
                     class="nav-item {% if request.endpoint in ['projects', 'new_project', 'edit_project', 'project_detail'] %}active{% endif %}">
-
-                    <span class="nav-icon">
-                        📦
-                    </span>
-
-                    <span>
-                        Projects
-                    </span>
-
+                    <span class="nav-icon">📦</span>
+                    <span>Projects</span>
                 </a>
-
 
                 <!-- Servers -->
-
                 <a href="{{ url_for('servers') }}"
                     class="nav-item {% if request.endpoint in ['servers', 'new_server', 'edit_server'] %}active{% endif %}">
-
-                    <span class="nav-icon">
-                        🖥️
-                    </span>
-
-                    <span>
-                        Servers
-                    </span>
-
+                    <span class="nav-icon">🖥️</span>
+                    <span>Servers</span>
                 </a>
-
 
                 <!-- Deployments -->
-
                 <a href="{{ url_for('deployments') }}"
                     class="nav-item {% if request.endpoint in ['deployments', 'new_deployment', 'edit_deployment'] %}active{% endif %}">
-
-                    <span class="nav-icon">
-                        🚀
-                    </span>
-
-                    <span>
-                        Deployments
-                    </span>
-
+                    <span class="nav-icon">🚀</span>
+                    <span>Deployments</span>
                 </a>
-
 
                 <!-- Audit Logs -->
-
                 <a href="{{ url_for('audit_logs') }}"
                     class="nav-item {% if request.endpoint == 'audit_logs' %}active{% endif %}">
-
-                    <span class="nav-icon">
-                        📋
-                    </span>
-
-                    <span>
-                        Audit Logs
-                    </span>
-
+                    <span class="nav-icon">📋</span>
+                    <span>Audit Logs</span>
                 </a>
-
 
                 <!-- Monitoring -->
-
-                <a href="#" class="nav-item">
-
-                    <span class="nav-icon">
-                        📊
-                    </span>
-
-                    <span>
-                        Monitoring
-                    </span>
-
+                <a href="{{ url_for('monitoring') }}"
+                    class="nav-item {% if request.endpoint == 'monitoring' %}active{% endif %}">
+                    <span class="nav-icon">📈</span>
+                    <span>Monitoring</span>
                 </a>
-
 
             </nav>
 
-
             <!-- Sidebar Bottom -->
-
             <div class="sidebar-bottom">
 
-
                 <!-- Settings -->
-
-                <a href="#" class="nav-item">
-
-                    <span class="nav-icon">
-                        ⚙
-                    </span>
-
-                    <span>
-                        Settings
-                    </span>
-
+                <a href="{{ url_for('settings') }}"
+                    class="nav-item {% if request.endpoint == 'settings' %}active{% endif %}">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Settings</span>
                 </a>
-
 
             </div>
 
         </aside>
 
 
-
         <!-- =========================================
-         MAIN CONTENT
-    ========================================= -->
+             MAIN CONTENT
+        ========================================== -->
 
         <main class="main">
 
-
-            <!-- Navbar -->
-
+            <!-- Top Navbar -->
             <header class="navbar">
 
-
                 <div>
-
                     <h2>
-
                         {% block page_title %}
                         Dashboard
                         {% endblock %}
-
                     </h2>
 
-                    <p>
-                        Cloud & DevOps Operations Center
-                    </p>
-
+                    <p>Cloud &amp; DevOps Operations Center</p>
                 </div>
 
-
-                <!-- User -->
-
+                <!-- User Information -->
                 <div class="user-section">
+
+                    <span class="environment-badge">
+                        {{ environment_label }}
+                    </span>
 
                     <div class="status-dot"></div>
 
-                    <span>
-                        AbdulNova
-                    </span>
+                    <span>AbdulNova</span>
 
                 </div>
-
 
             </header>
 
 
-
             <!-- Page Content -->
-
             <section class="content">
 
                 {% block content %}
-
                 {% endblock %}
 
             </section>
 
-
         </main>
-
 
     </div>
 

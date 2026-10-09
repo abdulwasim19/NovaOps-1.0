@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Settings | {{ app_name }}{% endblock %}
+
+{% block page_title %}Settings{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1>Application Settings</h1>
+        <p>Customize your NovaOps application preferences.</p>
+    </div>
+</div>
+
+<div class="settings-layout">
+
+    <section class="settings-card">
+
+        <div class="settings-card-header">
+            <h2>General Configuration</h2>
+            <p>Manage your application identity and environment.</p>
+        </div>
+
+        {% if error %}
+        <div class="form-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+
+            <div class="form-group">
+                <label for="app_name">Application Name</label>
+
+                <input type="text" id="app_name" name="app_name" value="{{ settings.app_name }}" maxlength="40"
+                    required>
+
+                <small>
+                    This name appears in the sidebar and browser tab.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="environment_label">Environment</label>
+
+                <select id="environment_label" name="environment_label" required>
+                    {% for environment in environments %}
+                    <option value="{{ environment }}" {% if settings.environment_label==environment %} selected {% endif
+                        %}>
+                        {{ environment }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <small>
+                    This label identifies the environment displayed in NovaOps.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="monitoring_refresh_seconds">
+                    Monitoring Auto-Refresh
+                </label>
+
+                <select id="monitoring_refresh_seconds" name="monitoring_refresh_seconds">
+                    {% for value, label in refresh_options %}
+                    <option value="{{ value }}" {% if settings.monitoring_refresh_seconds==value %} selected {% endif
+                        %}>
+                        {{ label }}
+                    </option>
+                    {% endfor %}
+                </select>
+
+                <small>
+                    Automatically refresh the Monitoring page at the selected interval.
+                </small>
+            </div>
+
+            <div class="settings-actions">
+                <button type="submit" class="primary-btn">
+                    Save Settings
+                </button>
+            </div>
+
+        </form>
+
+    </section>
+
+    <section class="settings-card settings-info-card">
+
+        <h2>Application Information</h2>
+
+        <div class="settings-info-row">
+            <span>Application</span>
+            <strong>NovaOps</strong>
+        </div>
+
+        <div class="settings-info-row">
+            <span>Version</span>
+            <strong>1.0</strong>
+        </div>
+
+        <div class="settings-info-row">
+            <span>Framework</span>
+            <strong>Flask</strong>
+        </div>
+
+        <div class="settings-info-row">
+            <span>Database</span>
+            <strong>SQLite</strong>
+        </div>
+
+        <div class="settings-info-row">
+            <span>Environment</span>
+            <strong>{{ environment_label }}</strong>
+        </div>
+
+        <p class="settings-note">
+            Application preferences are stored in the local database.
+            Environment selection is a display label; it does not change
+            AWS resources or deployment targets.
+        </p>
+
+    </section>
+
+</div>
+
+{% endblock %}

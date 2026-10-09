@@ -2350,3 +2350,414 @@ body {
     background: #f3f4f6;
     color: #6b7280;
 }
+
+/* =========================================
+   NOVAOPS MONITORING
+========================================= */
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+    color: #111827;
+}
+
+.page-header p {
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* Monitoring action buttons */
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #111827;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.btn-primary:hover {
+    background: #374151;
+    transform: translateY(-1px);
+}
+
+/* Summary cards */
+
+.monitoring-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.monitoring-card {
+    min-width: 0;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.monitoring-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+.monitoring-label {
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.monitoring-card h2 {
+    margin: 14px 0 10px;
+    font-size: 32px;
+    line-height: 1.2;
+    color: #111827;
+}
+
+.monitoring-card p {
+    color: #9ca3af;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* Monitoring sections */
+
+.monitoring-section {
+    margin-bottom: 26px;
+    padding: 26px 28px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.section-heading h2 {
+    margin-bottom: 7px;
+    font-size: 19px;
+    color: #111827;
+}
+
+.section-heading p {
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* Infrastructure health bar */
+
+.health-track {
+    width: 100%;
+    height: 10px;
+    overflow: hidden;
+    background: #e5e7eb;
+    border-radius: 20px;
+}
+
+.health-fill {
+    height: 100%;
+    background: #16a34a;
+    border-radius: 20px;
+    transition: width 0.3s ease;
+}
+
+/* Monitoring tables */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.monitoring-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.monitoring-table th,
+.monitoring-table td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.monitoring-table th {
+    background: #f9fafb;
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.monitoring-table td {
+    color: #374151;
+}
+
+.monitoring-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.monitoring-table tbody tr:hover {
+    background: #fafbfc;
+}
+
+/* Monitoring status labels */
+
+.monitoring-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.monitoring-status.status-running,
+.monitoring-status.status-successful {
+    background: #ecfdf5;
+    color: #15803d;
+}
+
+.monitoring-status.status-stopped {
+    background: #fffbeb;
+    color: #a16207;
+}
+
+.monitoring-status.status-failed {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.monitoring-status.status-in-progress {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+/* Failed deployment alerts */
+
+.monitoring-alert {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 17px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.monitoring-alert:last-child {
+    border-bottom: none;
+}
+
+.monitoring-alert strong {
+    color: #111827;
+    font-size: 14px;
+}
+
+.monitoring-alert p {
+    margin-top: 6px;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* Empty states and links */
+
+.monitoring-empty {
+    padding: 28px 16px !important;
+    color: #6b7280 !important;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.text-link {
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.text-link:hover {
+    text-decoration: underline;
+}
+
+/* Monitoring responsive layout */
+
+@media (max-width: 1100px) {
+    .monitoring-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .content {
+        padding: 20px;
+    }
+
+    .page-header,
+    .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .monitoring-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .monitoring-section {
+        padding: 18px;
+    }
+
+    .monitoring-card {
+        padding: 20px;
+    }
+
+    .monitoring-table th,
+    .monitoring-table td {
+        padding: 13px 10px;
+    }
+}
+
+/* =========================================
+   SETTINGS
+========================================= */
+
+.settings-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.settings-card {
+    min-width: 0;
+    padding: 28px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+}
+
+.settings-card-header {
+    margin-bottom: 25px;
+}
+
+.settings-card h2 {
+    margin-bottom: 8px;
+    font-size: 19px;
+    color: #111827;
+}
+
+.settings-card-header p {
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.settings-card .form-group small {
+    display: block;
+    margin-top: 8px;
+    color: #6b7280;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.settings-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.settings-actions button {
+    cursor: pointer;
+}
+
+.settings-info-card {
+    padding: 28px;
+}
+
+.settings-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 13px;
+}
+
+.settings-info-row span {
+    color: #6b7280;
+}
+
+.settings-info-row strong {
+    color: #111827;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.settings-note {
+    margin-top: 22px;
+    color: #6b7280;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.environment-badge {
+    padding: 6px 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    background: #f9fafb;
+    color: #374151;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+@media (max-width: 1000px) {
+    .settings-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .settings-card {
+        padding: 20px;
+    }
+
+    .environment-badge {
+        display: none;
+    }
+}

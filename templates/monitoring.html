@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% block title %}Monitoring | NovaOps 1.0{% endblock %}
+
+{% block page_title %}Infrastructure Monitoring{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1>Infrastructure Monitoring</h1>
+        <p>Monitor server health and deployment activity across NovaOps.</p>
+    </div>
+
+    <a href="{{ url_for('servers') }}" class="btn-primary">
+        Manage Servers
+    </a>
+</div>
+
+<!-- Infrastructure Summary -->
+<div class="monitoring-grid">
+
+    <div class="monitoring-card">
+        <span class="monitoring-label">Total Servers</span>
+        <h2>{{ total_servers }}</h2>
+        <p>Registered infrastructure</p>
+    </div>
+
+    <div class="monitoring-card">
+        <span class="monitoring-label">Running Servers</span>
+        <h2>{{ running_servers }}</h2>
+        <p>Servers marked as running</p>
+    </div>
+
+    <div class="monitoring-card">
+        <span class="monitoring-label">Stopped Servers</span>
+        <h2>{{ stopped_servers }}</h2>
+        <p>Servers marked as stopped</p>
+    </div>
+
+    <div class="monitoring-card">
+        <span class="monitoring-label">Failed Servers</span>
+        <h2>{{ failed_servers }}</h2>
+        <p>Servers marked as failed</p>
+    </div>
+
+</div>
+
+<!-- Infrastructure Health -->
+<section class="monitoring-section">
+    <div class="section-heading">
+        <div>
+            <h2>Infrastructure Health</h2>
+            <p>Percentage of registered servers marked as running.</p>
+        </div>
+
+        <h2>{{ health }}%</h2>
+    </div>
+
+    <div class="health-track">
+        <div class="health-fill" style="width: {{ health }}%;"></div>
+    </div>
+</section>
+
+<!-- Server Inventory -->
+<section class="monitoring-section">
+    <div class="section-heading">
+        <div>
+            <h2>Server Inventory</h2>
+            <p>Current server statuses and infrastructure details.</p>
+        </div>
+
+        <a href="{{ url_for('new_server') }}" class="btn-primary">
+            + Add Server
+        </a>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="monitoring-table">
+            <thead>
+                <tr>
+                    <th>Server</th>
+                    <th>IP Address</th>
+                    <th>Provider</th>
+                    <th>Region</th>
+                    <th>Project</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for server in servers %}
+                <tr>
+                    <td>{{ server.name }}</td>
+                    <td>{{ server.ip_address }}</td>
+                    <td>{{ server.provider }}</td>
+                    <td>{{ server.region }}</td>
+
+                    <td>
+                        {% if server.project %}
+                        {{ server.project.name }}
+                        {% else %}
+                        Unassigned
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <span class="monitoring-status status-{{ server.status|lower }}">
+                            {{ server.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="monitoring-empty">
+                        No servers registered yet.
+                        Add a server to begin monitoring.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Failed Deployments -->
+<section class="monitoring-section">
+    <div class="section-heading">
+        <div>
+            <h2>Failed Deployments</h2>
+            <p>Recent deployments recorded with a failed status.</p>
+        </div>
+
+        <a href="{{ url_for('deployments') }}" class="text-link">
+            View All Deployments →
+        </a>
+    </div>
+
+    {% for deployment in failed_deployments %}
+    <div class="monitoring-alert">
+        <div>
+            <strong>{{ deployment.project.name }}</strong>
+            <p>
+                Version {{ deployment.version }}
+                · {{ deployment.environment }}
+            </p>
+        </div>
+
+        <span class="monitoring-status status-failed">
+            Failed
+        </span>
+    </div>
+    {% else %}
+    <div class="monitoring-empty">
+        No failed deployments recorded. Keep it up!
+    </div>
+    {% endfor %}
+</section>
+
+<!-- Recent Deployments -->
+<section class="monitoring-section">
+    <div class="section-heading">
+        <div>
+            <h2>Recent Deployments</h2>
+            <p>The latest deployment activity recorded by NovaOps.</p>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="monitoring-table">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Server</th>
+                    <th>Version</th>
+                    <th>Environment</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for deployment in recent_deployments %}
+                <tr>
+                    <td>{{ deployment.project.name }}</td>
+                    <td>{{ deployment.server.name }}</td>
+                    <td>{{ deployment.version }}</td>
+                    <td>{{ deployment.environment }}</td>
+                    <td>
+                        <span class="monitoring-status status-{{ deployment.status|lower|replace(' ', '-') }}">
+                            {{ deployment.status }}
+                        </span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="monitoring-empty">
+                        No deployments recorded yet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{% if monitoring_refresh_seconds > 0 %}
+<script>
+    window.setTimeout(function () {
+        window.location.reload();
+    }, {{ monitoring_refresh_seconds * 1000 }});
+</script>
+{% endif %}
+
+
+{% endblock %}

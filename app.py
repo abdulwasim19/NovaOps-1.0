@@ -204,10 +204,72 @@ class AuditLog(db.Model):
         nullable=False
     )
 
+# =========================================
+# APPLICATION SETTINGS MODEL
+# =========================================
+
+
+class AppSetting(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    key = db.Column(db.String(100), unique=True, nullable=False)
+    value = db.Column(db.String(255), nullable=False)
+
+
+# =========================================
+# SETTINGS HELPER FUNCTIONS
+# =========================================
+
+def get_app_setting(key, default):
+    setting = AppSetting.query.filter_by(key=key).first()
+
+    if setting:
+        return setting.value
+
+    return default
+
+
+def save_app_setting(key, value):
+    setting = AppSetting.query.filter_by(key=key).first()
+
+    if setting:
+        setting.value = value
+    else:
+        setting = AppSetting(key=key, value=value)
+        db.session.add(setting)
+
+
+# =========================================
+# TEMPLATE CONTEXT PROCESSOR
+# ADD YOUR CODE HERE
+# =========================================
+
+@app.context_processor
+def inject_app_settings():
+    stored_settings = {
+        setting.key: setting.value
+        for setting in AppSetting.query.all()
+    }
+
+    try:
+        refresh_seconds = int(
+            stored_settings.get("monitoring_refresh_seconds", "0")
+        )
+    except ValueError:
+        refresh_seconds = 0
+
+    return {
+        "app_name": stored_settings.get("app_name", "NovaOps 1.0"),
+        "environment_label": stored_settings.get(
+            "environment_label", "Development"
+        ),
+        "monitoring_refresh_seconds": refresh_seconds
+    }
+
 
 # =========================================
 # AUDIT LOG HELPER
 # =========================================
+
 
 def create_audit_log(
     action,
@@ -230,9 +292,28 @@ def create_audit_log(
     db.session.add(log)
 
 
+def get_app_setting(key, default):
+    setting = AppSetting.query.filter_by(key=key).first()
+
+    if setting:
+        return setting.value
+
+    return default
+
+
+def save_app_setting(key, value):
+    setting = AppSetting.query.filter_by(key=key).first()
+
+    if setting:
+        setting.value = value
+    else:
+        setting = AppSetting(key=key, value=value)
+        db.session.add(setting)
+
 # =========================================
 # BASELINE AUDIT LOGS
 # =========================================
+
 
 def seed_existing_audit_logs():
     """
@@ -334,16 +415,142 @@ def seed_existing_audit_logs():
 
 @app.route("/")
 def dashboard():
-
-    # -----------------------------------------
-    # BASIC COUNTS
-    # -----------------------------------------
-
+    # Count resources
     project_count = Project.query.count()
-
     server_count = Server.query.count()
-
     deployment_count = Deployment.query.count()
+
+    # Deployment statistics
+    successful_deployments = Deployment.query.filter_by(
+        status="Successful"
+    ).count()
+
+    in_progress_deployments = Deployment.query.filter_by(
+        status="In Progress"
+    ).count()
+
+    failed_deployments = Deployment.query.filter_by(
+        status="Failed"
+    ).count()
+
+    # Server statistics
+    running_servers = Server.query.filter_by(
+        status="Running"
+    ).count()
+
+    stopped_servers = Server.query.filter_by(
+        status="Stopped"
+    ).count()
+
+    failed_servers = Server.query.filter_by(
+        status="Failed"
+    ).count()
+
+    # Calculate infrastructure health
+    health = (
+        round((running_servers / server_count) * 100)
+        if server_count > 0 else 0
+    )
+
+    # Recent resources and activity
+    recent_projects = (
+        Project.query
+        .order_by(Project.id.desc())
+        .limit(5)
+        .all()
+    )
+
+    recent_deployments = (
+        Deployment.query
+        .order_by(Deployment.deployed_at.desc())
+        .limit(5)
+        .all()
+    )
+
+    recent_activity = (
+        AuditLog.query
+        .order_by(AuditLog.created_at.desc())
+        .limit(8)
+        .all()
+    )
+
+    # Dashboard summary
+    stats = {
+        "projects": project_count,
+        "servers": server_count,
+        "deployments": deployment_count,
+        "health": health
+    }
+
+    deployment_stats = {
+        "successful": successful_deployments,
+        "in_progress": in_progress_deployments,
+        "failed": failed_deployments
+    }
+
+    server_stats = {
+        "running": running_servers,
+        "stopped": stopped_servers,
+        "failed": failed_servers
+    }
+
+    # IMPORTANT: Return the dashboard page
+    return render_template(
+        "dashboard.html",
+        stats=stats,
+        deployment_stats=deployment_stats,
+        server_stats=server_stats,
+        recent_projects=recent_projects,
+        recent_deployments=recent_deployments,
+        recent_activity=recent_activity
+    )
+
+
+@app.route("/monitoring")
+def monitoring():
+    # Get all servers
+    servers = Server.query.order_by(Server.name.asc()).all()
+
+    # Count servers by status
+    total_servers = Server.query.count()
+    running_servers = Server.query.filter_by(status="Running").count()
+    stopped_servers = Server.query.filter_by(status="Stopped").count()
+    failed_servers = Server.query.filter_by(status="Failed").count()
+
+    # Calculate health percentage
+    health = (
+        round((running_servers / total_servers) * 100)
+        if total_servers > 0 else 0
+    )
+
+    # Get failed deployments
+    failed_deployments = (
+        Deployment.query
+        .filter_by(status="Failed")
+        .order_by(Deployment.deployed_at.desc())
+        .limit(10)
+        .all()
+    )
+
+    # Get recent deployments
+    recent_deployments = (
+        Deployment.query
+        .order_by(Deployment.deployed_at.desc())
+        .limit(8)
+        .all()
+    )
+
+    return render_template(
+        "monitoring.html",
+        servers=servers,
+        total_servers=total_servers,
+        running_servers=running_servers,
+        stopped_servers=stopped_servers,
+        failed_servers=failed_servers,
+        health=health,
+        failed_deployments=failed_deployments,
+        recent_deployments=recent_deployments
+    )
 
     # -----------------------------------------
     # DEPLOYMENT STATISTICS
@@ -1331,14 +1538,97 @@ def audit_logs():
     )
 
 
+@app.route("/settings", methods=["GET", "POST"])
+def settings():
+    allowed_environments = [
+        "Development",
+        "Staging",
+        "Production"
+    ]
+
+    refresh_options = [
+        ("0", "Disabled"),
+        ("15", "Every 15 seconds"),
+        ("30", "Every 30 seconds"),
+        ("60", "Every 60 seconds"),
+        ("300", "Every 5 minutes")
+    ]
+
+    current_settings = {
+        "app_name": get_app_setting("app_name", "NovaOps 1.0"),
+        "environment_label": get_app_setting(
+            "environment_label", "Development"
+        ),
+        "monitoring_refresh_seconds": get_app_setting(
+            "monitoring_refresh_seconds", "0"
+        )
+    }
+
+    error = None
+
+    if request.method == "POST":
+        app_name = request.form.get("app_name", "").strip()
+        environment_label = request.form.get(
+            "environment_label", ""
+        )
+        refresh_seconds = request.form.get(
+            "monitoring_refresh_seconds", "0"
+        )
+
+        current_settings = {
+            "app_name": app_name,
+            "environment_label": environment_label,
+            "monitoring_refresh_seconds": refresh_seconds
+        }
+
+        allowed_refresh_values = [
+            value for value, label in refresh_options
+        ]
+
+        if not app_name or len(app_name) > 40:
+            error = "Application name must contain 1–40 characters."
+
+        elif environment_label not in allowed_environments:
+            error = "Please select a valid environment."
+
+        elif refresh_seconds not in allowed_refresh_values:
+            error = "Please select a valid monitoring refresh interval."
+
+        else:
+            save_app_setting("app_name", app_name)
+            save_app_setting(
+                "environment_label", environment_label
+            )
+            save_app_setting(
+                "monitoring_refresh_seconds", refresh_seconds
+            )
+
+            create_audit_log(
+                "UPDATE",
+                "Settings",
+                None,
+                "Application settings were updated."
+            )
+
+            db.session.commit()
+
+            return redirect(url_for("settings"))
+
+    return render_template(
+        "settings.html",
+        settings=current_settings,
+        environments=allowed_environments,
+        refresh_options=refresh_options,
+        error=error
+    )
+
 # =========================================
 # DATABASE
 # =========================================
 
+
 with app.app_context():
-
     db.create_all()
-
     seed_existing_audit_logs()
 
 
@@ -1347,7 +1637,4 @@ with app.app_context():
 # =========================================
 
 if __name__ == "__main__":
-
-    app.run(
-        debug=True
-    )
+    app.run(debug=True)
