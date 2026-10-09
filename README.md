@@ -645,7 +645,7 @@ Although the current version does not yet provide direct AWS resource management
 ## 📸 Screenshots
 
 ### 1. Dashboard
-![NovaOps Dashboard](screenshots/dashboard.png)
+![NovaOps Dashboard](/home/abdul-wasim/Pictures/Screenshots/)
 
 ### 2. Project Management
 ![NovaOps Projects](screenshots/projects.png)
